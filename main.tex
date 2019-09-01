@@ -77,8 +77,11 @@ database takes a different approach, by assigning unambiguous
 identifier strings (though not computed via a hash function) to sets
 of sequences comprising specific versions of a genome assembly
 \citep{ncbi-assembly}. Knowing the identifier is therefore sufficient
-to knowing the full set of sequences in the assembly. Another approach
-to reduce manual metadata tracking associated with a number of
+to knowing the full set of sequences in the assembly.
+% talk here about seqrepo:
+% https://github.com/biocommons/biocommons.seqrepo
+% https://docs.google.com/presentation/d/1AN2hHstDeijPQ2uDRss9BafK6jWEwP-DCKD6FjGxyr0/edit#slide=id.p
+Another approach to reduce manual metadata tracking associated with a number of
 reference sequences is Refgenie. Refgenie is a tool that helps with
 management of bundles of files associated with reference genomes, and
 facilitates sharing provenance information across research groups in
@@ -403,7 +406,7 @@ data and reference sequence metadata. The software is implemented
 within the R/Bioconductor environment for data analysis, and leverages
 a number of existing Bioconductor functionality for parsing annotation
 files, metadata storage, and genomic range manipulation
-\citep{bioc,biocfilecache,granges}.
+\citep{bioc,ensembldb,biocfilecache,granges}.
 
 Currently, the pre-computed hashed checksums are focused on human,
 mouse, and fruit fly reference transcripts, from the popular reference
@@ -419,6 +422,15 @@ supported by a future reference sequence retrieval API. Furthermore,
 we provide a mechanism for formally linking those reference
 transcripts not in any pre-computed hash table (e.g. \textit{de novo}
 transcriptomes) with publicly accessible metadata.
+
+% should we talk here about the next challenge:
+% when quantifying allelic expression, we will need
+% to have stable identifiers for the alleles as well.
+% there is some existing work here (also using hashed checksums)
+% in 'hgvs' + 'seqrepo'
+%
+% https://github.com/biocommons/hgvs
+% https://github.com/biocommons/biocommons.seqrepo
 
 All bioinformatic software packages have a finite lifespan, including
 the tximeta package described here. We join with others in
