@@ -2,6 +2,7 @@
 \usepackage{amsmath,amssymb,graphicx}
 \usepackage[margin=1in]{geometry} \usepackage{hyperref}
 \usepackage{xcolor} \newcommand{\mike}[1]{\textcolor{blue}{(Mike: #1)}}
+\usepackage{xcolor} \newcommand{\charlotte}[1]{\textcolor{red}{(Charlotte: #1)}}
 
 \usepackage[sort&compress,numbers]{natbib}
 \bibliographystyle{unsrtnat}
@@ -9,7 +10,7 @@
 \title{Tximeta: reference sequence checksums for \\ provenance
   identification in RNA-seq} \author{Michael I. Love, Charlotte
   Soneson, Peter Hickey, Lisa K. Johnson, \\ Tessa Pierce, Lori
-  Shephard, Martin Morgan, Rob Patro}
+  Shepherd, Martin Morgan, Rob Patro}
 
 \begin{document}
 
@@ -17,22 +18,24 @@
 
 \section*{Introduction}
 
+\charlotte{What about adding a figure with the workflow, e.g. like the one in the tximeta GitHub repo README?}
+
 An RNA-seq data analysis often involves quantification of sequence
 read data with respect to a set of known reference transcripts. These
 reference transcripts may be downloaded from a database such as
 Gencode, Ensembl, or RefSeq \citep{gencode,ensembl,refseq} in the form
-of sequences in FASTA format and transcript locations in a genome in
+of nucleotide sequences in FASTA format and/or transcript locations in a genome in
 GTF/GFF (gene transfer format / general feature format). Alternatively
-a novel reference may be prepared as part of the data analysis. The
-provenance of the reference transcripts, their source and release
+a novel set of reference transcripts may be derived as part of the data analysis. The
+provenance of the reference transcripts, including their source and release
 number, can be considered critical metadata with respect to the
-processed data, the files with quantification information. Without
+processed data, that is, the files with quantification information. Without
 information about the reference provenance, computational
 reproducibility (as defined by \citet{Patil2016} as re-performing the
-analysis with the same data and code) may be difficulty or
+analysis with the same data and code) may be difficult or
 impossible. Manually keeping track of these critical pieces of
 metadata throughout a long-term bioinformatic project is tedious and
-error prone, though manual metadata tracking is a common practice in
+error prone; still manual metadata tracking is a common practice in
 RNA-seq bioinformatics. For example, a common approach to tracking the
 reference transcripts that were used during quantification would be to
 keep a \texttt{README} file in the same directory as the
@@ -42,11 +45,11 @@ reference transcripts.
 In addition to impeding computational reproducibility, missing or
 wrong metadata can potentially lead to serious errors in downstream
 analysis: if quantification files are shared with genomic coordinates
-but without crticial metadata about the genome version, computation of
+but without criticial metadata about the genome version, computation of
 overlaps with other genomic data with mismatching genome versions can
 lead to faulty inference of overlap enrichment. Additional annotation
 tasks, such as conversion of transcript or gene identifiers, or
-summarization of transcript data to gene level is made more difficult
+summarization of transcript-level data to the gene level is made more difficult
 when the reference provenance is not known. \citet{Kanduri2017}
 documented issues surrounding the lack of provenance metadata for BED,
 WIG, and GFF files, and described this problem as a ``major time
@@ -66,7 +69,7 @@ analysis. We will first review frameworks for tracking provenance of
 reference sequences, and secondly describe more general
 frameworks. The CRAM format, developed at the EBI, involves computing
 differences between biological sequences and a given reference so that
-the sequences themselves do not need to be stored in total within an
+the sequences themselves do not need to be stored in full within an
 alignment file \citep{cram}. Because the specific reference used is
 critical for data integrity, CRAM includes checksums of the reference
 sequences as part of the file header. A partner utility called refget
@@ -103,7 +106,7 @@ workflow. \citet{Belhajjame2015} summarizes literature in the field of
 computational reproducibility and efforts toward extensive provenance
 tracking. The developers of the Common Workflow Language \citep{cwl}
 have defined a profile, CWLProv, for recording provenance through a
-workflow run, and have a number of implementations including within
+workflow run, and have a number of implementations, including within
 cwltool \citep{Khan2018}. The developers of CWLProv emphasize the
 importance of tracking versions of input data, such as reference
 genomes or variant databases in a scientific workflow, and they
@@ -137,7 +140,7 @@ used. Therefore it can provide some utility for bioinformatic analysts
 without requiring full buy-in of a particular workflow execution
 framework. Tximeta is similar in implementation to how the CRAM format
 uses hashed checksum to identify the particular genome sequence used
-during alignment, but instead with the transcript sequence during
+during alignment, but instead with the transcript sequences used during
 RNA-seq sample quantification. We see tximeta as a piece of a larger
 effort to create software systems that are ``more amenable to
 reproducibility'' \citep{Peng2011}.
@@ -180,8 +183,8 @@ Gencode, Ensembl, and RefSeq, see Table \ref{tab1}), as well as to a
 custom hash table which will be described below. Tximeta verifies that
 the checksum and therefore the reference transcriptome sequence is
 identical across all samples being imported. If there is a match of
-the checksum to the pre-computed checksums or the custom hash table,
-tximeta will then begin to compile additional relevant
+the checksum among the pre-computed checksums or in the custom hash table,
+tximeta will begin to compile additional relevant
 metadata. Depending on whether the checksum has been seen by tximeta
 before, one of two steps will occur:
 
@@ -249,7 +252,7 @@ for FASTA and GTF/GFF, and the package versions for tximeta and other
 Bioconductor packages used during the parsing of the GTF/GFF. At any
 later point in time, annotation tasks can be performed by on-demand
 retrieval of the cached databases, for example summarization of
-transcript-level information to the gene-level, conversion of
+transcript-level information to the gene level, conversion of
 transcript or gene identifiers, or addition of exon ranges.
 
 A key aspect of the tximeta workflow described here is that it does
@@ -261,8 +264,8 @@ contained in tximeta's built-in hash table of reference
 transcriptomes. For such cases, we have developed functionality in
 tximeta to formally link a given hashed checksum to a publicly
 available FASTA file(s) and a GTF/GFF file. The
-\texttt{makelinkedTxome} function can be called, pointing to both the
-Salmon index as well as the locations of the FASTA and GTF/GFF, and
+\texttt{makelinkedTxome} function can be called, pointing to the
+Salmon index as well as the locations of the FASTA and GTF/GFF files, and
 this will perform two operations: (1) it will populate a custom hash
 table, managed by BiocFileCache, and (2) it will produce a JSON file
 that can be shared or uploaded, which links the transcriptome checksum
@@ -288,6 +291,7 @@ to samples from the experiment).
 \begin{verbatim}
     coldata <- read.csv("coldata.csv")
 \end{verbatim}
+\charlotte{Worth showing the first rows of coldata, i.e. using some real data for the example?}
 
 This table must have a column \texttt{files} which points to paths of
 quantification files, and a column \texttt{names} with the sample
