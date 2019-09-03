@@ -3,13 +3,14 @@
 \usepackage[margin=1in]{geometry} \usepackage{hyperref}
 \usepackage{xcolor} \newcommand{\mike}[1]{\textcolor{blue}{(Mike: #1)}}
 \usepackage{xcolor} \newcommand{\charlotte}[1]{\textcolor{red}{(Charlotte: #1)}}
+\usepackage{xcolor} \newcommand{\peter}[1]{\textcolor{orange}{(Peter: #1)}}
 
 \usepackage[sort&compress,numbers]{natbib}
 \bibliographystyle{unsrtnat}
 
 \title{Tximeta: reference sequence checksums for \\ provenance
   identification in RNA-seq} \author{Michael I. Love, Charlotte
-  Soneson, Peter Hickey, Lisa K. Johnson, \\ Tessa Pierce, Lori
+  Soneson, Peter F. Hickey, Lisa K. Johnson, \\ Tessa Pierce, Lori
   Shepherd, Martin Morgan, Rob Patro}
 
 \begin{document}
@@ -22,10 +23,12 @@
 
 \mike{great idea, I'll do this this week}
 
+\peter{agreed, great idea!}
+
 An RNA-seq data analysis often involves quantification of sequence
 read data with respect to a set of known reference transcripts. These
 reference transcripts may be downloaded from a database such as
-Gencode, Ensembl, or RefSeq \citep{gencode,ensembl,refseq} in the form
+GENCODE, Ensembl, or RefSeq \citep{gencode,ensembl,refseq} in the form
 of nucleotide sequences in FASTA format and/or transcript locations in a genome in
 GTF/GFF (gene transfer format / general feature format). Alternatively
 a novel set of reference transcripts may be derived as part of the data analysis. The
@@ -58,7 +61,7 @@ WIG, and GFF files, and described this problem as a ``major time
 thief'' in bioinformatics. Likewise, \citet{Simoneau2019} described
 information on genome assembly and annotation as ``essential'' for
 describing the computational analysis of RNA-seq data, and contend
-that, `` no study using RNA-seq should be published without these
+that, ``no study using RNA-seq should be published without these
 methodological details.''
 
 A number of frameworks have been proposed that would solve the problem
@@ -69,7 +72,7 @@ of tracking the state of all files, including data and metadata and
 any software used to process these files, throughout every step of an
 analysis. We will first review frameworks for tracking provenance of
 reference sequences, and secondly describe more general
-frameworks. The CRAM format, developed at the EBI, involves computing
+frameworks. The CRAM format, developed at the European Bioinformatics Institute, involves computing
 differences between biological sequences and a given reference so that
 the sequences themselves do not need to be stored in full within an
 alignment file \citep{cram}. Because the specific reference used is
@@ -186,7 +189,7 @@ During import of quantification files into R/Bioconductor
 the transcriptome index checksum, and compares this checksum to a hash
 table of pre-computed checksums of a subset of commonly used reference
 transcriptomes (human, mouse, and fruit fly reference transcripts from
-Gencode, Ensembl, and RefSeq, see Table \ref{tab1}), as well as to a
+GENCODE, Ensembl, and RefSeq, see Table \ref{tab1}), as well as to a
 custom hash table which will be described below. Tximeta verifies that
 the checksum and therefore the reference transcriptome sequence is
 identical across all samples being imported. If there is a match of
@@ -197,7 +200,7 @@ before, one of two steps will occur:
 
 \begin{itemize}
 \item (First time) - Tximeta attempts to download the appropriate GTF
-  file via FTP and parse it. Gencode and RefSeq GTF files are parsed
+  file via FTP and parse it. GENCODE and RefSeq GTF files are parsed
   by GenomicFeatures \citep{granges}, while Ensembl GTF files are
   parsed by ensembldb \citep{ensembldb}. Tximeta then creates a
   locally cached SQLite database of the parsed GTF file, as well as a
@@ -213,8 +216,8 @@ before, one of two steps will occur:
 \centering
 \begin{tabular}{llll} 
 \hline Source & Organism & Releases & Transcript sequence file
-\\ \hline\hline Gencode & \textit{Homo sapiens} & 23 -- 31 &
-transcripts.fa \\ Gencode & \textit{Mus musculus} & M6 -- M22 &
+\\ \hline\hline GENCODE & \textit{Homo sapiens} & 23 -- 31 &
+transcripts.fa \\ GENCODE & \textit{Mus musculus} & M6 -- M22 &
 transcripts.fa \\ \hline Ensembl & \textit{Homo sapiens} & 76 -- 97 &
 *.cdna.all.fa (nr) \\ Ensembl & \textit{Mus musculus} & 76 -- 97 &
 *.cdna.all.fa (nr) \\ Ensembl & \textit{Drosophila melanogaster} & 79
@@ -244,7 +247,7 @@ million, TPM). By convention, rows correspond to genomic features
 addition, the rows of the matrices are linked to transcript ranges,
 embedded in an appropriate genome version (e.g. GRCh38) including
 chromosome names and lengths. If tximeta did not find a matching
-transcriptome in the hash table then an un-ranged SummarizedExperiment
+transcriptome in the hash table then a non-ranged SummarizedExperiment \peter{minor: the ranges aren't taken away, so non-ranged sounds better to my ear than un-ranged}
 will be returned as the function's output, as the location and context
 of the transcript ranges are not known to tximeta. Comparison of
 ranges across genome versions, or without properly matching
@@ -254,7 +257,7 @@ about the samples, if provided by the user, is automatically attached
 to the columns of the SummarizedExperiment object. Additional metadata
 attached by tximeta includes all of the per-sample metadata saved from
 Salmon (e.g. library type, percent reads mapping, etc.), information
-about the reference transcriptome and pointers to the source file(s)
+about the reference transcriptome and pointers \peter{Different term? 'pointers' has the technical computer programming meaning which I don't think this is} to the source file(s)
 for FASTA and GTF/GFF, and the package versions for tximeta and other
 Bioconductor packages used during the parsing of the GTF/GFF. At any
 later point in time, annotation tasks can be performed by on-demand
@@ -325,6 +328,7 @@ Tximeta will then print the following messages as the files are being
 imported (if a match is found, and if this checksum has been seen
 before by tximeta):
 
+\peter{Why is it `release XX' below and not an actual version number? Also, the other example output has a line after `read\_tsv' giving progress on how many files read. Super minor: GENCODE spell it all caps.}
 \begin{verbatim}
     ## importing quantifications reading in files with read_tsv found
     ## matching transcriptome: [ Gencode - Homo sapiens - release XX ]
@@ -441,7 +445,7 @@ files, metadata storage, and genomic range manipulation
 
 Currently, the pre-computed hashed checksums are focused on human,
 mouse, and fruit fly reference transcripts, from the popular reference
-transcriptome sources Gencode, Ensembl, and RefSeq. Additional
+transcriptome sources GENCODE, Ensembl, and RefSeq. Additional
 transcriptome releases from these sources are programmatically
 downloaded, the hashed checksum computed, and the checksum added to
 the tximeta package on Bioconductor's 6 month release cycle. We are
