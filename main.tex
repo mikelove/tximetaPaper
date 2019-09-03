@@ -20,6 +20,8 @@
 
 \charlotte{What about adding a figure with the workflow, e.g. like the one in the tximeta GitHub repo README?}
 
+\mike{great idea, I'll do this this week}
+
 An RNA-seq data analysis often involves quantification of sequence
 read data with respect to a set of known reference transcripts. These
 reference transcripts may be downloaded from a database such as
@@ -285,23 +287,35 @@ transcriptome in tximeta's built-in hash table.
 \subsection*{Importing quantification data from known transcriptome}
 
 An example of importing RNA-seq quantification files using tximeta can
-be followed in the tximeta package vignette. Here we demonstrate the
-case where the Salmon files were quantified against a transcriptome
-that is in tximeta's pre-computed hash table (for a list of supported
-transcriptomes as of the writing of this manuscript, see Table
-\ref{tab1}). Import begins by specifying a sample table (the ``column
-data'', as the columns of the SummarizedExperiment object correspond
-to samples from the experiment).
+be followed in the tximeta or fishpond Bioconductor package
+vignettes. Here we demonstrate the case where the Salmon files were
+quantified against a transcriptome that is in tximeta's pre-computed
+hash table (for a list of supported transcriptomes as of the writing
+of this manuscript, see Table \ref{tab1}). Import begins by specifying
+a sample table (the ``column data'', as the columns of the
+SummarizedExperiment object correspond to samples from the
+experiment).
 
 \begin{verbatim}
     coldata <- read.csv("coldata.csv")
 \end{verbatim}
-\charlotte{Worth showing the first rows of coldata, i.e. using some real data for the example?}
+
+For example, in the fishpond Bioconductor package vignette, the
+following \texttt{coldata} is read into R in the beginning of the
+analysis (here just showing the first two rows and five columns):
+
+\begin{verbatim}
+    ##            names sample_id line_id replicate condition_name
+    ## 1 SAMEA103885102    diku_A  diku_1         1          naive
+    ## 2 SAMEA103885347    diku_B  diku_1         1           IFNg
+\end{verbatim}
 
 This table must have a column \texttt{files} which points to paths of
 quantification files, and a column \texttt{names} with the sample
-identifiers. The next step is to provide this table to the
-\texttt{tximeta} function:
+identifiers. One paradigm used in fishpond vignette and elsewhere is
+to construct the \texttt{files} column from the \texttt{names} column
+using R's \texttt{file.path} function. The next step is to provide
+this table to the \texttt{tximeta} function:
 
 \begin{verbatim}
     se <- tximeta(coldata)
@@ -312,10 +326,10 @@ imported (if a match is found, and if this checksum has been seen
 before by tximeta):
 
 \begin{verbatim}
-## importing quantifications reading in files with read_tsv found
-## matching transcriptome: [ Gencode - Homo sapiens - release XX ]
-## loading existing EnsDb created: 2019-01-01 12:34:56 loading
-## existing transcript ranges created: 2019-01-01 12:34:56
+    ## importing quantifications reading in files with read_tsv found
+    ## matching transcriptome: [ Gencode - Homo sapiens - release XX ]
+    ## loading existing EnsDb created: 2019-01-01 12:34:56 loading
+    ## existing transcript ranges created: 2019-01-01 12:34:56
 \end{verbatim}
 
 If the checksum matched one of the custom transcriptome checksums that
@@ -370,19 +384,26 @@ killifish (\textit{Fundulus rathbuni}), quantified via Salmon
 \citep{salmon} against a \textit{de novo} transcriptome assembled with
 Trinity \citep{trinity} and annotated via dammit \citep{dammit}. An
 example workflow is provided in the denovo-tximeta repository on
-GitHub \citep{denovo}. Here, the FASTA sequence of the \textit{de
-  novo} assembly as well as a GFF3 annotation file have been posted to
-Zenodo, and permalinks can be used to point to those records. After
-the reference transcripts have been indexed by Salmon, the following
-tximeta function can be called within R:
+GitHub \citep{denovo}. Here, the FASTA sequence of the
+\textit{de novo} assembly as well as a GFF3 annotation file have been
+posted to Zenodo, and permalinks can be used to point to those
+records. After the reference transcripts have been indexed by Salmon,
+the following tximeta function can be called within R:
 
 \begin{verbatim}
-makeLinkedTxome(indexDir="F_rathbuni.trinity_out", source="dammit",
-organism="Fundulus rathbuni", release="0", genome="none",
-fasta="https://zenodo.org/record/1486276/files/F_rathbuni.trinity_out.fasta",
-gtf="https://zenodo.org/record/2226742/files/F_rathbuni.trinity_out.Trinity.fasta.dammit.gff3",
-jsonFile="F_rathbuni.json")
+makeLinkedTxome(
+  indexDir="F_rathbuni.trinity_out", 
+  source="dammit",
+  organism="Fundulus rathbuni", 
+  release="0", 
+  genome="none",
+  fasta="https://zenodo.org/record/1486276/files/F_rathbuni.trinity_out.fasta",
+  gtf="https://zenodo.org/record/2226742/files/F_rathbuni.trinity_out.Trinity.fasta.dammit.gff3",
+  jsonFile="F_rathbuni.json"
+)
 \end{verbatim}
+
+\mike{need to figure out how to chop these long URLs...}
 
 This stores an entry in the custom hash table managed by
 BiocFileCache, and produces a JSON file which can be shared with other
@@ -393,13 +414,14 @@ checksum will be recognized and the relevant metadata attached to the
 SummarizedExperiment object output:
 
 \begin{verbatim}
-coldata <- data.frame(files, names) se <- tximeta(coldata)
+   coldata <- data.frame(files, names) 
+   se <- tximeta(coldata)
 
-## importing quantifications reading in files with read_tsv 1 2 3 4 5
-## 6 7 8 9 found matching linked transcriptome: [ dammit - Fundulus
-## rathbuni - release 0 ] loading existing TxDb created: 2018-12-13
-## 18:26:20 Loading required package: GenomicFeatures Loading required
-## package: AnnotationDbi generating transcript ranges
+   ## importing quantifications reading in files with read_tsv 1 2 3 4 5
+   ## 6 7 8 9 found matching linked transcriptome: [ dammit - Fundulus
+   ## rathbuni - release 0 ] loading existing TxDb created: 2018-12-13
+   ## 18:26:20 Loading required package: GenomicFeatures Loading required
+   ## package: AnnotationDbi generating transcript ranges
 \end{verbatim}
 
 \section*{Discussion}
@@ -436,9 +458,8 @@ transcriptomes) with publicly accessible metadata.
 % when quantifying allelic expression, we will need
 % to have stable identifiers for the alleles as well.
 % there is some existing work here (also using hashed checksums)
-% in 'hgvs' + 'seqrepo'
-%
-% https://github.com/biocommons/hgvs
+% 'vr' + 'seqrepo'
+% https://vr-spec.readthedocs.io/en/1.0rc/
 % https://github.com/biocommons/biocommons.seqrepo
 
 All bioinformatic software packages have a finite lifespan, including
