@@ -167,8 +167,13 @@ sequence collections, for example, computing a hashed checksum over a
 lexicographically sorted set of checksums for each transcript cDNA
 sequence, which would provide order-invariance for the collection
 identifier. During quantification of a single sample, Salmon embeds
-the transcriptome index checksum in the metadata file associated with
-the sample output.
+the transcriptome index checksum in a metadata file associated with
+the sample output. Per sample, Salmon outputs a directory with a
+specific file structure, including files with quantification
+information as well as others with important metadata about the
+parameters. The entire directory should be considered the output of
+the quantification tool, and not just the text file with the
+quantification information.
 
 During import of quantification files into R/Bioconductor
 \citep{bioc}, leveraging the existing tximport package
