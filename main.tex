@@ -247,7 +247,7 @@ million, TPM). By convention, rows correspond to genomic features
 addition, the rows of the matrices are linked to transcript ranges,
 embedded in an appropriate genome version (e.g. GRCh38) including
 chromosome names and lengths. If tximeta did not find a matching
-transcriptome in the hash table then a non-ranged SummarizedExperiment \peter{minor: the ranges aren't taken away, so non-ranged sounds better to my ear than un-ranged}
+transcriptome in the hash table then a non-ranged SummarizedExperiment
 will be returned as the function's output, as the location and context
 of the transcript ranges are not known to tximeta. Comparison of
 ranges across genome versions, or without properly matching
@@ -257,7 +257,7 @@ about the samples, if provided by the user, is automatically attached
 to the columns of the SummarizedExperiment object. Additional metadata
 attached by tximeta includes all of the per-sample metadata saved from
 Salmon (e.g. library type, percent reads mapping, etc.), information
-about the reference transcriptome and pointers \peter{Different term? 'pointers' has the technical computer programming meaning which I don't think this is} to the source file(s)
+about the reference transcriptome and file paths or ftp URLs for the source file(s)
 for FASTA and GTF/GFF, and the package versions for tximeta and other
 Bioconductor packages used during the parsing of the GTF/GFF. At any
 later point in time, annotation tasks can be performed by on-demand
@@ -328,12 +328,12 @@ Tximeta will then print the following messages as the files are being
 imported (if a match is found, and if this checksum has been seen
 before by tximeta):
 
-\peter{Why is it `release XX' below and not an actual version number? Also, the other example output has a line after `read\_tsv' giving progress on how many files read. Super minor: GENCODE spell it all caps.}
 \begin{verbatim}
-    ## importing quantifications reading in files with read_tsv found
-    ## matching transcriptome: [ Gencode - Homo sapiens - release XX ]
-    ## loading existing EnsDb created: 2019-01-01 12:34:56 loading
-    ## existing transcript ranges created: 2019-01-01 12:34:56
+    ## importing quantifications reading in files with read_tsv 
+    ## found matching transcriptome: 
+    ## [ GENCODE - Homo sapiens - release 97 ]
+    ## loading existing EnsDb created: 2019-01-01 12:34:56 
+    ## loading existing transcript ranges created: 2019-01-01 12:34:56
 \end{verbatim}
 
 If the checksum matched one of the custom transcriptome checksums that
@@ -421,11 +421,11 @@ SummarizedExperiment object output:
    coldata <- data.frame(files, names) 
    se <- tximeta(coldata)
 
-   ## importing quantifications reading in files with read_tsv 1 2 3 4 5
-   ## 6 7 8 9 found matching linked transcriptome: [ dammit - Fundulus
-   ## rathbuni - release 0 ] loading existing TxDb created: 2018-12-13
-   ## 18:26:20 Loading required package: GenomicFeatures Loading required
-   ## package: AnnotationDbi generating transcript ranges
+   ## importing quantifications reading in files with read_tsv
+   ## found matching linked transcriptome: 
+   ## [ dammit - Fundulus rathbuni - release 0 ] 
+   ## loading existing TxDb created: 2018-12-13 18:26:20 
+   ## generating transcript ranges
 \end{verbatim}
 
 \section*{Discussion}
