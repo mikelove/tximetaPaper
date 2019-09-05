@@ -5,6 +5,13 @@
 \usepackage{xcolor} \newcommand{\charlotte}[1]{\textcolor{red}{(Charlotte: #1)}}
 \usepackage{xcolor} \newcommand{\peter}[1]{\textcolor{orange}{(Peter: #1)}}
 
+\usepackage{listings}
+\lstset{
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true
+}
+
 \usepackage[sort&compress,numbers]{natbib}
 \bibliographystyle{unsrtnat}
 
@@ -18,12 +25,6 @@
 \maketitle
 
 \section*{Introduction}
-
-\charlotte{What about adding a figure with the workflow, e.g. like the one in the tximeta GitHub repo README?}
-
-\mike{great idea, I'll do this this week}
-
-\peter{agreed, great idea!}
 
 An RNA-seq data analysis often involves quantification of sequence
 read data with respect to a set of known reference transcripts. These
@@ -80,15 +81,18 @@ critical for data integrity, CRAM includes checksums of the reference
 sequences as part of the file header. A partner utility called refget
 has been developed in order to allow for programmatic retrieval of the
 reference sequence from a computed checksum, which acts as an
-identifier of the reference sequence \citep{refget}. The NCBI Assembly
+identifier of the reference sequence \citep{refget}. A similar
+approach is taken by GA4GH's Variation Representation Specification
+\citep{vr}, which uses a hashed checksum (or ``digest'') to uniquely
+refer to molecular variation, and by the seqrepo python package
+for writing and reading collections of biological sequences
+\citep{seqrepo}. The NCBI Assembly
 database takes a different approach, by assigning unambiguous
 identifier strings (though not computed via a hash function) to sets
 of sequences comprising specific versions of a genome assembly
 \citep{ncbi-assembly}. Knowing the identifier is therefore sufficient
 to knowing the full set of sequences in the assembly.
-% talk here about VR and seqrepo:
-% https://vr-spec.readthedocs.io/en/1.0rc/
-% https://github.com/biocommons/biocommons.seqrepo
+
 Another approach to reduce manual metadata tracking associated with a number of
 reference sequences is Refgenie. Refgenie is a tool that helps with
 management of bundles of files associated with reference genomes, and
@@ -150,6 +154,15 @@ RNA-seq sample quantification. We see tximeta as a piece of a larger
 effort to create software systems that are ``more amenable to
 reproducibility'' \citep{Peng2011}.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=.6\textwidth]{diagram.pdf}
+  \caption{Flowchart of Salmon quantification followed by tximeta
+    data import, resulting in a SummarizedExperiment with reference
+    transcript provenance metadata (see Methods).}
+  \label{fig:diagram}
+\end{figure}
+
 \section*{Methods}
 
 Tximeta has been developed to work with output from Salmon, Sailfish,
@@ -158,7 +171,8 @@ although the implementation could be extended to other quantification
 tools that store a hashed checksum within the index and propagate this
 checksum to the sample output metadata. Without loss of generality, we
 describe the implementation referring to Salmon quantification files
-below.
+below. A diagram of the following workflow is shown in Figure
+\ref{fig:diagram}. 
 
 During the indexing step, Salmon computes the hashed checksum of the
 cDNA sequence of the reference transcripts. The set of reference
@@ -394,7 +408,7 @@ posted to Zenodo, and permalinks can be used to point to those
 records. After the reference transcripts have been indexed by Salmon,
 the following tximeta function can be called within R:
 
-\begin{verbatim}
+\begin{lstlisting}
 makeLinkedTxome(
   indexDir="F_rathbuni.trinity_out", 
   source="dammit",
@@ -405,9 +419,7 @@ makeLinkedTxome(
   gtf="https://zenodo.org/record/2226742/files/F_rathbuni.trinity_out.Trinity.fasta.dammit.gff3",
   jsonFile="F_rathbuni.json"
 )
-\end{verbatim}
-
-\mike{need to figure out how to chop these long URLs...}
+\end{lstlisting}
 
 This stores an entry in the custom hash table managed by
 BiocFileCache, and produces a JSON file which can be shared with other
@@ -427,6 +439,12 @@ SummarizedExperiment object output:
    ## loading existing TxDb created: 2018-12-13 18:26:20 
    ## generating transcript ranges
 \end{verbatim}
+
+After running \texttt{tximeta}, the SummarizedExperiment object
+\texttt{se} will have the ranges described by the GTF/GFF object,
+including any metadata about those transcripts. In the case of the
+killifish RNA-seq experiment, the transcript ranges have length,
+strand, and an informative column \texttt{gene\_id}.
 
 \section*{Discussion}
 
@@ -456,15 +474,11 @@ releases of reference transcriptomes from Ensembl and/or RefSeq may be
 supported by a future reference sequence retrieval API. Furthermore,
 we provide a mechanism for formally linking those reference
 transcripts not in any pre-computed hash table (e.g. \textit{de novo}
-transcriptomes) with publicly accessible metadata.
-
-% should we talk here about the next challenge:
-% when quantifying allelic expression, we will need
-% to have stable identifiers for the alleles as well.
-% there is some existing work here (also using hashed checksums)
-% 'vr' + 'seqrepo'
-% https://vr-spec.readthedocs.io/en/1.0rc/
-% https://github.com/biocommons/biocommons.seqrepo
+transcriptomes) with publicly accessible metadata. Finally, we plan to
+develop tximeta to support provenance identification at the level of
+alleles, by combining our current reference transcript identification
+with transcript variant identification as described in GA4GH's Variant
+Representation Specification \citep{vr}.
 
 All bioinformatic software packages have a finite lifespan, including
 the tximeta package described here. We join with others in
@@ -483,9 +497,10 @@ shared publicly but without this critical information
 
 \section*{Acknowledgments}
 
-Vince Carey, Paul Flicek, Joel Parker, Oliver Hoffmann, Stephen
-Turner, Shannan Ho Sui, Thomas Keane, Andy Yates, Reece Hart, Matthew
-Laird, Terence Murphy, Nathan Sheffield.
+The authors thank the following individuals for useful discussions 
+in the development of tximeta: Vince Carey, Paul Flicek, Joel Parker,
+Oliver Hoffmann, Stephen Turner, Shannan Ho Sui, Thomas Keane, Andy
+Yates, Reece Hart, Matthew Laird, Terence Murphy, Nathan Sheffield.
 
 \nocite{*}
 
