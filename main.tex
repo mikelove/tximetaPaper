@@ -5,13 +5,6 @@
 \usepackage{xcolor} \newcommand{\charlotte}[1]{\textcolor{red}{(Charlotte: #1)}}
 \usepackage{xcolor} \newcommand{\peter}[1]{\textcolor{orange}{(Peter: #1)}}
 
-\usepackage{listings}
-\lstset{
-basicstyle=\small\ttfamily,
-columns=flexible,
-breaklines=true
-}
-
 \widowpenalty10000
 \clubpenalty10000
 
@@ -389,6 +382,14 @@ those transcripts that overlap a range defined in a variable
     se_sub <- se[se %over% x,]
 \end{verbatim}
 
+The metadata columns associated with the genomic ranges of the
+SummarizedExperiment will have different information depending on the
+source. For GENCODE, Ensembl, and RefSeq, the chromosome names, start
+and end positions, strand, and transcript or gene ID are always
+included. Quantification data with an Ensembl source will also include
+the transcript biotype, and the start and end of the CDS sequence in
+the metadata columns.
+
 Further examples of manipulating the SummarizedExperiment object can
 be found in the tximeta vignette, in the fishpond vignette, and in the
 plyrangesTximetaCaseStudy package \citep{casestudy}.
@@ -428,7 +429,7 @@ posted to Zenodo, and permalinks are used to point to those
 records. After the reference transcripts have been indexed by Salmon,
 the following tximeta function can be called within R:
 
-\begin{lstlisting}
+\begin{verbatim}
 makeLinkedTxome(
   indexDir="F_rathbuni.trinity_out", 
   source="dammit",
@@ -436,10 +437,11 @@ makeLinkedTxome(
   release="0", 
   genome="none",
   fasta="https://zenodo.org/record/1486276/files/F_rathbuni.trinity_out.fasta",
-  gtf="https://zenodo.org/record/2226742/files/F_rathbuni.trinity_out.Trinity.fasta.dammit.gff3",
+  gtf="https://zenodo.org/record/2226742/files/F_rathbuni.trinity_out.Trinity.
+       fasta.dammit.gff3",
   jsonFile="F_rathbuni.json"
 )
-\end{lstlisting}
+\end{verbatim}
 
 The function does not return an R object, but has the side effect of
 storing an entry in the custom hash table managed by BiocFileCache,
@@ -465,9 +467,27 @@ After running \texttt{tximeta}, the SummarizedExperiment object
 \texttt{se} will have attached to its rows the ranges described by the
 GTF/GFF object, including any metadata about those transcripts. In the
 case of the killifish RNA-seq experiment, the transcript ranges have
-length, strand, and an informative column \texttt{gene\_id}.
+length, strand, and an informative column \texttt{gene\_id}. The ranges
+of the SummarizedExperiment can be examined (here only showing the first
+two ranges):
 
-\charlotte{One thing that just came to mind: the actual annotation columns (geneID etc) added to the SE by default depend on the reference source, right - is it worth mentioning what information will be added, or maybe it's too much detail (and may change). Maybe exemplify?}
+\begin{verbatim}
+    rowRanges(se)
+
+    ## GRanges object with 143492 ranges and 3 metadata columns:
+    ##                                              seqnames    ranges strand |
+    ##                                                 <Rle> <IRanges>  <Rle> |
+    ##   TRINITY_DN114791_c0_g1_i1 TRINITY_DN114791_c0_g1_i1    1-2308      + |
+    ##   TRINITY_DN114724_c0_g2_i1 TRINITY_DN114724_c0_g2_i1     1-635      - |
+    ##                                 tx_id
+    ##                             <integer>
+    ##   TRINITY_DN114791_c0_g1_i1      1290
+    ##   TRINITY_DN114724_c0_g2_i1      1283
+    ##                                                                 gene_id
+    ##                                                         <CharacterList>
+    ##   TRINITY_DN114791_c0_g1_i1 ORF Transcript_...type:complete len:190 (+)
+    ##   TRINITY_DN114791_c0_g1_i1 ORF Transcript_...5prime_partial len:83 (-)
+\end{verbatim}
 
 \section*{Discussion}
 
