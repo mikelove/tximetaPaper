@@ -150,14 +150,14 @@ shared or public datasets, regardless of whether the original analyst
 kept or shared accurate records of the reference transcripts that were
 used. Therefore it can provide some utility for bioinformatic analysts
 without requiring full buy-in of a particular workflow execution
-framework. Tximeta is similar in implementation to how the CRAM format
-uses hashed checksums to identify the particular genome sequence used
-during alignment, but instead to identify the transcript sequences used during
-RNA-seq sample quantification. \charlotte{This sentence sounds a bit strange to me. Perhaps something like "Tximeta is similar in implementation to the CRAM format in the use of hashed checksums, but identifies the transcript sequences used during sample quantification rather than the genome sequence used during alignment."}. We see tximeta as a piece of a larger
+framework.
+Tximeta is similar in implementation to the CRAM format in the use
+of hashed checksums, but identifies the transcript sequences used
+during sample quantification rather than the genome sequence used
+during alignment.
+We see tximeta as a piece of a larger
 effort to create software systems that are ``more amenable to
 reproducibility'' \citep{Peng2011}.
-
-\charlotte{In the figure, the "quantification" arrow goes to the index, which then feeds further into the quant output. What about pointing the "quantification" arrow directly to the quant output, and put the "quantification" label over both that arrow and the one from the index to the quant output?}
 
 \begin{figure}
   \centering
@@ -327,7 +327,7 @@ experiment).
     coldata <- read.csv("coldata.csv")
 \end{verbatim}
 
-For example, in the fishpond Bioconductor package vignette \charlotte{cite?}, the
+For example, in the fishpond Bioconductor package vignette \citep{swish}, the
 following \texttt{coldata} is read into R in the beginning of the
 analysis (here just showing the first two rows and five columns):
 
@@ -339,11 +339,19 @@ analysis (here just showing the first two rows and five columns):
 
 This table must have a column \texttt{files} which points to paths of
 quantification files (\texttt{quant.sf}), and a column \texttt{names} with the sample
-identifiers \charlotte{Would it be pedagogical if the example contained the "files" column?}. It is expected that the quantification files are located
+identifiers. The following line can be used to create the
+\texttt{files} column (if it does not already exist), where \texttt{dir}
+specifies the directory where the Salmon output directories are
+located, and here assuming that the sample names have been used as the
+Salmon output directory names. 
+
+\begin{verbatim}
+    coldata$files <- file.path(dir, coldata$names, "quant.sf")
+\end{verbatim}
+
+It is expected that the quantification files are located
 within the original directory structure created by Salmon and with all
-the associated metadata files. One paradigm used in the fishpond vignette
-and elsewhere is to construct the \texttt{files} column from the
-\texttt{names} column using R's \texttt{file.path} function. The next
+the associated metadata files. The next
 step is to provide this table to the \texttt{tximeta} function:
 
 \begin{verbatim}
