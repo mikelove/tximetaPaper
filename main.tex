@@ -54,7 +54,7 @@ provenance of the reference transcripts.
 In addition to impeding computational reproducibility, missing or
 wrong metadata can potentially lead to serious errors in downstream
 analysis: if quantification data are shared with genomic coordinates
-but without criticial metadata about the genome version, computation of
+but without critical metadata about the genome version, computation of
 overlaps with other genomic data with mis-matching genome versions can
 lead to faulty inference of overlap enrichment. Additional annotation
 tasks, such as conversion of transcript or gene identifiers, or
@@ -95,7 +95,7 @@ a different approach, by assigning unambiguous identifier strings
 (though not computed via a hash function) to sets of sequences
 comprising specific releases of a genome assembly
 \citep{ncbi-assembly}. Knowing the identifier is therefore sufficient
-to knowing the full set of sequences in the assembly.
+to know the full set of sequences in the assembly.
 Another approach to reduce manual metadata tracking associated with a
 number of reference sequences is Refgenie. Refgenie is a tool that
 helps with management of bundles of files associated with reference
@@ -153,9 +153,11 @@ without requiring full buy-in of a particular workflow execution
 framework. Tximeta is similar in implementation to how the CRAM format
 uses hashed checksums to identify the particular genome sequence used
 during alignment, but instead to identify the transcript sequences used during
-RNA-seq sample quantification. We see tximeta as a piece of a larger
+RNA-seq sample quantification. \charlotte{This sentence sounds a bit strange to me. Perhaps something like "Tximeta is similar in implementation to the CRAM format in the use of hashed checksums, but identifies the transcript sequences used during sample quantification rather than the genome sequence used during alignment."}. We see tximeta as a piece of a larger
 effort to create software systems that are ``more amenable to
 reproducibility'' \citep{Peng2011}.
+
+\charlotte{In the figure, the "quantification" arrow goes to the index, which then feeds further into the quant output. What about pointing the "quantification" arrow directly to the quant output, and put the "quantification" label over both that arrow and the one from the index to the quant output?}
 
 \begin{figure}
   \centering
@@ -193,12 +195,12 @@ lexicographically sorted set of checksums for each transcript cDNA
 sequence, which would provide order-invariance for the collection
 identifier. During quantification of a single sample, Salmon embeds
 the transcriptome index checksum in a metadata file associated with
-the sample output. Per sample, Salmon outputs a directory with a
+the sample output. For each sample, Salmon outputs a directory with a
 specific file structure, including files with quantification
 information as well as others with important metadata about the
-parameters. The entire directory should be considered the output of
-the quantification tool, and not just the text file with the
-quantification information.
+parameters. The entire directory, not just the text file with the
+quantification information, should be considered the output of
+the quantification tool.
 
 During import of quantification data into R/Bioconductor
 \citep{bioc}, leveraging the existing tximport package
@@ -217,7 +219,8 @@ before, one of two steps will occur:
 
 \begin{itemize}
 \item (First time) - Tximeta attempts to download the appropriate GTF/GFF
-  file via FTP and parse it. GENCODE and RefSeq GTF/GFF files are parsed
+  file via FTP and parse it using Bioconductor packages. 
+  GENCODE and RefSeq GTF/GFF files are parsed
   by GenomicFeatures \citep{granges}, while Ensembl GTF files are
   parsed by ensembldb \citep{ensembldb}. Tximeta then creates a
   locally cached SQLite database of the parsed GTF/GFF file, as well as a
@@ -324,7 +327,7 @@ experiment).
     coldata <- read.csv("coldata.csv")
 \end{verbatim}
 
-For example, in the fishpond Bioconductor package vignette, the
+For example, in the fishpond Bioconductor package vignette \charlotte{cite?}, the
 following \texttt{coldata} is read into R in the beginning of the
 analysis (here just showing the first two rows and five columns):
 
@@ -336,9 +339,9 @@ analysis (here just showing the first two rows and five columns):
 
 This table must have a column \texttt{files} which points to paths of
 quantification files (\texttt{quant.sf}), and a column \texttt{names} with the sample
-identifiers. It is expected that the quantification files are located
+identifiers \charlotte{Would it be pedagogical if the example contained the "files" column?}. It is expected that the quantification files are located
 within the original directory structure created by Salmon and with all
-the associated metadata files. One paradigm used in fishpond vignette
+the associated metadata files. One paradigm used in the fishpond vignette
 and elsewhere is to construct the \texttt{files} column from the
 \texttt{names} column using R's \texttt{file.path} function. The next
 step is to provide this table to the \texttt{tximeta} function:
@@ -388,7 +391,7 @@ It is also possible to use tximeta to import quantification data when
 the transcriptome does not belong to those in the set of pre-computed
 checksums (Table \ref{tab1}). This case may occur because the
 reference transcriptome is from another source or another organism
-other than those currently in this pre-computed set, or because the
+than those currently in this pre-computed set, or because the
 transcriptome has been modified by the addition of non-reference
 transcripts (e.g. cancer fusion transcripts, or pathogen transcripts)
 which changes the checksum, or because the entire transcriptome has
@@ -406,7 +409,7 @@ and GTF/GFF files). This link is created by the tximeta function
 checksum in a custom hash table managed by BiocFileCache, along with
 the permalinks to publicly available FASTA and GTF/GFF files.
 
-We demonstrate this use case, with RNA-seq data of the speckled
+We demonstrate this use case with RNA-seq data of the speckled
 killifish (\textit{Fundulus rathbuni}), quantified via Salmon
 \citep{salmon} against a \textit{de novo} transcriptome assembled with
 Trinity \citep{trinity} and annotated via dammit \citep{dammit}. An
@@ -455,6 +458,8 @@ After running \texttt{tximeta}, the SummarizedExperiment object
 GTF/GFF object, including any metadata about those transcripts. In the
 case of the killifish RNA-seq experiment, the transcript ranges have
 length, strand, and an informative column \texttt{gene\_id}.
+
+\charlotte{One thing that just came to mind: the actual annotation columns (geneID etc) added to the SE by default depend on the reference source, right - is it worth mentioning what information will be added, or maybe it's too much detail (and may change). Maybe exemplify?}
 
 \section*{Discussion}
 
