@@ -33,9 +33,13 @@ provenance of the reference transcripts, including their source and release
 number, can be considered critical metadata with respect to the
 processed data, that is, the files with quantification information. Without
 information about the reference provenance, computational
-reproducibility (as defined by \citet{Patil2016} as re-performing the
-analysis with the same data and code and obtaining the same result)
-may be difficult or impossible. Manually keeping track of these
+reproducibility --- as defined by \citet{Patil2016} as re-performing the
+analysis with the same data and code and obtaining the same result ---
+may be difficult or impossible. Reproducibility has been set as a
+high-level goal for all NIH-funded research~\cite{collins2014,lauer2017}, 
+and so as developers of bioinformatic tools, we should design software
+that promotes and facilitates computational reproducibility.
+Manually keeping track of
 critical pieces of metadata throughout a long-term bioinformatic
 project is tedious and error prone; still, manual metadata tracking is
 a common practice in RNA-seq bioinformatics. For example, a common
