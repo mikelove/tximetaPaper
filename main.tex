@@ -232,22 +232,26 @@ before, one of two steps will occur:
 \begin{table}[t]
 \centering
 \begin{tabular}{llll} 
-\hline Source & Organism & Releases & Transcript sequence file
-\\ \hline\hline GENCODE & \textit{Homo sapiens} & 23 -- 31 &
-transcripts.fa \\ GENCODE & \textit{Mus musculus} & M6 -- M22 &
-transcripts.fa \\ \hline Ensembl & \textit{Homo sapiens} & 76 -- 97 &
-*.cdna.all.fa (nr) \\ Ensembl & \textit{Mus musculus} & 76 -- 97 &
-*.cdna.all.fa (nr) \\ Ensembl & \textit{Drosophila melanogaster} & 79
--- 97 & *.cdna.all.fa (nr) \\ \hline Ensembl & \textit{Homo sapiens} &
-76 -- 97 & *.cdna.all.fa + *.ncrna.fa \\ Ensembl & \textit{Mus
-  musculus} & 76 -- 97 & *.cdna.all.fa + *.ncrna.fa \\ Ensembl &
-\textit{Drosophila melanogaster} & 79 -- 97 & *.cdna.all.fa +
-*.ncrna.fa \\ \hline RefSeq & \textit{Homo sapiens} & p1 -- p13 &
-*\_rna.fa \\ RefSeq & \textit{Mus musculus} & p2 -- p6 & *\_rna.fa
-\\ \hline
+  \hline
+  Source & Organism & Releases & Transcript sequence file \\
+  \hline \hline
+  GENCODE & \textit{Homo sapiens} & 23 -- 31 & transcripts.fa \\
+  GENCODE & \textit{Mus musculus} & M6 -- M22 & transcripts.fa \\
+  \hline
+  Ensembl & \textit{Homo sapiens} & 76 -- 97 & *.cdna.all.fa (nr) \\
+  Ensembl & \textit{Mus musculus} & 76 -- 97 & *.cdna.all.fa (nr) \\
+  Ensembl & \textit{Drosophila melanogaster} & 79 -- 97 & *.cdna.all.fa (nr) \\
+  \hline
+  Ensembl & \textit{Homo sapiens} & 76 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
+  Ensembl & \textit{Mus musculus} & 76 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
+  Ensembl & \textit{Drosophila melanogaster} & 79 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
+  \hline
+  RefSeq & \textit{Homo sapiens} & p1 -- p12 & *\_rna.fa \\
+  RefSeq & \textit{Mus musculus} & p2 -- p5 & *\_rna.fa \\
+\hline
 \end{tabular}
 \caption{Pre-computed reference transcripts checksums in tximeta as of
-  Fall 2019. The set of pre-computed checksums span the releases from
+  Fall 2019. The set of pre-computed checksums span the stable releases from
   these sources for the years 2015 -- 2019. (nr) - not recommended: we
   recommend combination of coding and non-coding transcripts for
   RNA-seq quantification.}
