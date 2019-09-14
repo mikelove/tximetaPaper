@@ -238,23 +238,26 @@ before, one of two steps will occur:
   GENCODE & \textit{Homo sapiens} & 23 -- 31 & transcripts.fa \\
   GENCODE & \textit{Mus musculus} & M6 -- M22 & transcripts.fa \\
   \hline
-  Ensembl & \textit{Homo sapiens} & 76 -- 97 & *.cdna.all.fa (nr) \\
-  Ensembl & \textit{Mus musculus} & 76 -- 97 & *.cdna.all.fa (nr) \\
-  Ensembl & \textit{Drosophila melanogaster} & 79 -- 97 & *.cdna.all.fa (nr) \\
+  Ensembl & \textit{Homo sapiens} & 76 -- 97 & *.cdna.all.fa (NR) \\
+  Ensembl & \textit{Mus musculus} & 76 -- 97 & *.cdna.all.fa (NR) \\
+  Ensembl & \textit{Drosophila melanogaster} & 79 -- 97 & *.cdna.all.fa (NR) \\
   \hline
   Ensembl & \textit{Homo sapiens} & 76 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
   Ensembl & \textit{Mus musculus} & 76 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
   Ensembl & \textit{Drosophila melanogaster} & 79 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
   \hline
-  RefSeq & \textit{Homo sapiens} & p1 -- p12 & *\_rna.fa \\
-  RefSeq & \textit{Mus musculus} & p2 -- p5 & *\_rna.fa \\
+  RefSeq & \textit{Homo sapiens} & p1 -- p12$\dagger$ & *\_rna.fa \\
+  RefSeq & \textit{Mus musculus} & p2 -- p5$\dagger$ & *\_rna.fa \\
 \hline
 \end{tabular}
 \caption{Pre-computed reference transcripts checksums in tximeta as of
   Fall 2019. The set of pre-computed checksums span the stable releases from
-  these sources for the years 2015 -- 2019. (nr) - not recommended: we
+  these sources for the years 2015 -- 2019. (NR) - not recommended: we
   recommend combination of coding and non-coding transcripts for
-  RNA-seq quantification.}
+  accurate RNA-seq quantification; $\dagger$ - RefSeq releases p13 and
+  p6 for human and mouse respectively are currently \textit{latest},
+  which means they are subject to updates under the same release
+  number, and so not stable releases.} 
 \label{tab1}
 \end{table}
 
