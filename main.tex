@@ -134,7 +134,7 @@ We see tximeta as a piece of a larger
 effort to create software systems that are ``more amenable to
 reproducibility'' \citep{Peng2011}.
 
-\section*{Methods}
+\section*{Design and Implementation}
 
 Tximeta has been developed to work with output from Salmon, Sailfish,
 or Alevin quantification tools \citep{sailfish,salmon,alevin},
@@ -152,7 +152,7 @@ below. A diagram of the following workflow is shown in Figure
     {\bf Flowchart of Salmon quantification followed by tximeta.}
     The quantification and import pipeline results in a
     SummarizedExperiment with reference transcript provenance
-    metadata added by tximeta (see Methods).}
+    metadata added by tximeta (see Design and Implementation).}
   \label{fig:diagram}
 \end{figure}
 
@@ -483,7 +483,7 @@ two ranges, and suppressing range names):
     ##   ORF Transcript_...5prime_partial len:83 (-)
 \end{verbatim}
 
-\section*{Discussion}
+\section*{Availability and Future Directions}
 
 We outline an implementation for importing RNA-seq quantification
 data that involves (1) the quantification tool (here, Salmon)
@@ -496,7 +496,8 @@ data and reference sequence metadata. The software is implemented
 within the R/Bioconductor environment for data analysis, and leverages
 a number of existing Bioconductor packages for parsing annotation
 files, metadata storage, and genomic range manipulation
-\citep{bioc,ensembldb,biocfilecache,granges}.
+\citep{bioc,ensembldb,biocfilecache,granges}. The tximeta package is
+available at \url{https://bioconductor.org/packages/tximeta}.
 
 Currently, the pre-computed hashed checksums are focused on human,
 mouse, and fruit fly reference transcripts, from the popular reference
@@ -533,3 +534,14 @@ to the ``major time thief'' of \textit{post hoc} guesswork involved in
 identifying the reference sequence provenance of genomic datasets
 shared publicly but without this critical information
 \citep{Kanduri2017}.
+
+\section*{Data Availability}
+
+All datasets used in this manuscript are available as Bioconductor
+data packages used in the tximeta or fishpond package vignettes, or
+have been deposited to Zenodo:
+
+\begin{itemize}
+  \item De novo transcriptome assembly (FASTA) \href{https://doi.org/10.5281/zenodo.1486276}{DOI: 10.5281/zenodo.1486276}.
+  \item Annotation file (GFF3) \href{https://doi.org/10.5281/zenodo.2226742}{DOI: 10.5281/zenodo.2226742},
+\end{itemize}

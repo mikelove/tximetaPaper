@@ -138,22 +138,37 @@ Rob Patro\textsuperscript{8}
 % Please keep the abstract below 300 words
 \section*{Abstract}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget porta erat. Morbi consectetur est vel gravida pretium. Suspendisse ut dui eu ante cursus gravida non sed sem. Nullam sapien tellus, commodo id velit id, eleifend volutpat quam. Phasellus mauris velit, dapibus finibus elementum vel, pulvinar non tellus. Nunc pellentesque pretium diam, quis maximus dolor faucibus id. Nunc convallis sodales ante, ut ullamcorper est egestas vitae. Nam sit amet enim ultrices, ultrices elit pulvinar, volutpat risus.
-
-
-% Please keep the Author Summary between 150 and 200 words
-% Use first person. PLOS ONE authors please skip this step. 
-% Author Summary not valid for PLOS ONE submissions.   
-\section*{Author summary}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eget porta erat. Morbi consectetur est vel gravida pretium. Suspendisse ut dui eu ante cursus gravida non sed sem. Nullam sapien tellus, commodo id velit id, eleifend volutpat quam. Phasellus mauris velit, dapibus finibus elementum vel, pulvinar non tellus. Nunc pellentesque pretium diam, quis maximus dolor faucibus id. Nunc convallis sodales ante, ut ullamcorper est egestas vitae. Nam sit amet enim ultrices, ultrices elit pulvinar, volutpat risus.
+Correct annotation metadata is critical for reproducible and accurate
+RNA-seq analysis. When files are shared publicly or among
+collaborators with incorrect or missing annotation metadata, it
+becomes difficult or impossible to reproduce bioinformatic analyses
+from raw data. It also makes it more difficult to locate the
+transcriptomic features, such as transcripts or genes, in their proper
+genomic context, which is necessary for overlapping expression data
+with other datasets. We provide a solution in the form of an
+R/Bioconductor package tximeta that performs numerous annotation and
+metadata gathering tasks automatically on behalf of users during the
+import of transcript quantification files. The correct reference
+transcriptome is identified via a hashed checksum stored in the
+quantification output, and key transcript databases are downloaded and
+cached locally. The computational paradigm of automatically adding
+annotation metadata based on reference sequence checksums can greatly
+facilitate genomic workflows, by helping to reduce overhead during
+bioinformatic analyses, preventing costly bioinformatic mistakes, and
+promoting computational reproducibility.
+The tximeta package is
+available at \url{https://bioconductor.org/packages/tximeta}.
 
 \linenumbers
 
 \input{main}
 
 \section*{Acknowledgments}
-Cras egestas velit mauris, eu mollis turpis pellentesque sit amet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam id pretium nisi. Sed ac quam id nisi malesuada congue. Sed interdum aliquet augue, at pellentesque quam rhoncus vitae.
+
+The authors thank the following individuals for useful discussions 
+in the development of tximeta: Vince Carey, Paul Flicek, Joel Parker,
+Oliver Hoffmann, Stephen Turner, Shannan Ho Sui, Thomas Keane, Andy
+Yates, Reece Hart, Matthew Laird, Terence Murphy, Nathan Sheffield.
 
 \nolinenumbers
 
