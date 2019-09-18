@@ -134,15 +134,6 @@ We see tximeta as a piece of a larger
 effort to create software systems that are ``more amenable to
 reproducibility'' \citep{Peng2011}.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.6\textwidth]{diagram.pdf}
-  \caption{Flowchart of Salmon quantification followed by tximeta
-    data import, resulting in a SummarizedExperiment with reference
-    transcript provenance metadata (see Methods).}
-  \label{fig:diagram}
-\end{figure}
-
 \section*{Methods}
 
 Tximeta has been developed to work with output from Salmon, Sailfish,
@@ -153,6 +144,17 @@ checksum to the sample output metadata. Without loss of generality, we
 describe the implementation referring to Salmon quantification data
 below. A diagram of the following workflow is shown in Figure
 \ref{fig:diagram}. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.6\textwidth]{diagram.pdf}
+  \caption{
+    {\bf Flowchart of Salmon quantification followed by tximeta.}
+    The quantification and import pipeline results in a
+    SummarizedExperiment with reference transcript provenance
+    metadata added by tximeta (see Methods).}
+  \label{fig:diagram}
+\end{figure}
 
 During the indexing step, Salmon computes the hashed checksum of the
 cDNA sequence of the reference transcripts. The set of reference
@@ -208,11 +210,12 @@ before, one of two steps will occur:
 \end{itemize}
 
 \begin{table}[t]
-\centering
+  \centering
+  \caption{\bf{Pre-computed reference transcripts checksums in tximeta as of Fall 2019.}}
 \begin{tabular}{llll} 
   \hline
-  Source & Organism & Releases & Transcript sequence file \\
-  \hline \hline
+  \bf{Source} & \bf{Organism} & \bf{Releases} & \bf{Transcript sequence file} \\
+  \thickhline
   GENCODE & \textit{Homo sapiens} & 23 -- 31 & transcripts.fa \\
   GENCODE & \textit{Mus musculus} & M6 -- M22 & transcripts.fa \\
   \hline
@@ -228,14 +231,15 @@ before, one of two steps will occur:
   RefSeq & \textit{Mus musculus} & p2 -- p5$\dagger$ & *\_rna.fa \\
 \hline
 \end{tabular}
-\caption{Pre-computed reference transcripts checksums in tximeta as of
-  Fall 2019. The set of pre-computed checksums span the stable releases from
+\begin{flushleft}
+  The set of pre-computed checksums span the stable releases from
   these sources for the years 2015 -- 2019. (NR) - not recommended: we
   recommend combination of coding and non-coding transcripts for
   accurate RNA-seq quantification; $\dagger$ - RefSeq releases p13 and
   p6 for human and mouse respectively are currently \textit{latest},
   which means they are subject to updates under the same release
-  number, and so not stable releases.} 
+  number, and so not stable releases.
+\end{flushleft}
 \label{tab1}
 \end{table}
 
@@ -425,9 +429,10 @@ makeLinkedTxome(
   organism="Fundulus rathbuni", 
   release="0", 
   genome="none",
-  fasta="https://zenodo.org/record/1486276/files/F_rathbuni.trinity_out.fasta",
-  gtf="https://zenodo.org/record/2226742/files/F_rathbuni.trinity_out.Trinity.
-       fasta.dammit.gff3",
+  fasta="https://zenodo.org/record/1486276/files/
+         F_rathbuni.trinity_out.fasta",
+  gtf="https://zenodo.org/record/2226742/files/
+       F_rathbuni.trinity_out.Trinity.fasta.dammit.gff3",
   jsonFile="F_rathbuni.json"
 )
 \end{verbatim}
@@ -458,24 +463,24 @@ GTF/GFF object, including any metadata about those transcripts. In the
 case of the killifish RNA-seq experiment, the transcript ranges have
 length, strand, and an informative column \texttt{gene\_id}. The ranges
 of the SummarizedExperiment can be examined (here only showing the first
-two ranges):
+two ranges, and suppressing range names):
 
 \begin{verbatim}
     rowRanges(se)
 
     ## GRanges object with 143492 ranges and 3 metadata columns:
-    ##                                              seqnames    ranges strand |
-    ##                                                 <Rle> <IRanges>  <Rle> |
-    ##   TRINITY_DN114791_c0_g1_i1 TRINITY_DN114791_c0_g1_i1    1-2308      + |
-    ##   TRINITY_DN114724_c0_g2_i1 TRINITY_DN114724_c0_g2_i1     1-635      - |
-    ##                                 tx_id
-    ##                             <integer>
-    ##   TRINITY_DN114791_c0_g1_i1      1290
-    ##   TRINITY_DN114724_c0_g2_i1      1283
-    ##                                                                 gene_id
-    ##                                                         <CharacterList>
-    ##   TRINITY_DN114791_c0_g1_i1 ORF Transcript_...type:complete len:190 (+)
-    ##   TRINITY_DN114791_c0_g1_i1 ORF Transcript_...5prime_partial len:83 (-)
+    ##                    seqnames    ranges strand |
+    ##                       <Rle> <IRanges>  <Rle> |
+    ##   TRINITY_DN114791_c0_g1_i1    1-2308      + |
+    ##   TRINITY_DN114724_c0_g2_i1     1-635      - |
+    ##        tx_id
+    ##    <integer>
+    ##         1290
+    ##         1283
+    ##                                       gene_id
+    ##                               <CharacterList>
+    ##   ORF Transcript_...type:complete len:190 (+)
+    ##   ORF Transcript_...5prime_partial len:83 (-)
 \end{verbatim}
 
 \section*{Discussion}

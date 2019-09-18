@@ -1,15 +1,32 @@
-\documentclass[12pt]{article} \usepackage[utf8]{inputenc}
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb,graphicx}
-\usepackage[margin=1in]{geometry} \usepackage{hyperref}
-\usepackage{xcolor} \newcommand{\mike}[1]{\textcolor{blue}{(Mike: #1)}}
-\usepackage{xcolor} \newcommand{\charlotte}[1]{\textcolor{red}{(Charlotte: #1)}}
-\usepackage{xcolor} \newcommand{\peter}[1]{\textcolor{orange}{(Peter: #1)}}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+%\usepackage{xcolor} \newcommand{\mike}[1]{\textcolor{blue}{(Mike: #1)}}
+%\usepackage{xcolor} \newcommand{\charlotte}[1]{\textcolor{red}{(Charlotte: #1)}}
+%\usepackage{xcolor} \newcommand{\peter}[1]{\textcolor{orange}{(Peter: #1)}}
 
 \widowpenalty10000
 \clubpenalty10000
 
 \usepackage[sort&compress,numbers]{natbib}
 \bibliographystyle{unsrtnat}
+
+% create \thickcline for thick horizontal lines of variable length
+\newlength\savedwidth
+\newcommand\thickcline[1]{%
+  \noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+  \cline{#1}%
+  \noalign{\vskip\arrayrulewidth}%
+  \noalign{\global\arrayrulewidth\savedwidth}%
+}
+
+% \thickhline command for thick horizontal lines that span the table
+\newcommand\thickhline{\noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+\hline
+\noalign{\global\arrayrulewidth\savedwidth}}
+
 
 \title{Tximeta: reference sequence checksums for \\ provenance
   identification in RNA-seq} \author{Michael I. Love, Charlotte

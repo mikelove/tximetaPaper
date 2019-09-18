@@ -1,5 +1,5 @@
-ALL = wrapper.pdf
-TEXFILES = wrapper
+ALL = plos.pdf
+TEXFILES = plos main
 #STYFILES = styfiles
 #CLSFILES = clsfiles
 #FIGURES = 
