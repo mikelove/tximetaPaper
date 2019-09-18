@@ -1,5 +1,5 @@
-ALL = main.pdf
-TEXFILES = main
+ALL = wrapper.pdf
+TEXFILES = wrapper
 #STYFILES = styfiles
 #CLSFILES = clsfiles
 #FIGURES = 
