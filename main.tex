@@ -11,8 +11,8 @@ provenance of the reference transcripts, including their source and release
 number, can be considered critical metadata with respect to the
 processed data, that is, the files with quantification information. Without
 information about the reference provenance, computational
-reproducibility --- as defined by \citet{Patil2016} as re-performing the
-analysis with the same data and code and obtaining the same result ---
+reproducibility --- re-performing the analysis with the same data and
+code and obtaining the same result~\cite{Patil2016} --- 
 may be difficult or impossible. Reproducibility has been set as a
 high-level goal for all NIH-funded research~\cite{collins2014,lauer2017}, 
 and so as developers of bioinformatic tools, we should design software
@@ -34,10 +34,11 @@ overlaps with other genomic data with mis-matching genome versions can
 lead to faulty inference of overlap enrichment. Additional annotation
 tasks, such as conversion of transcript or gene identifiers, or
 summarization of transcript-level data to the gene level is made more difficult
-when the reference provenance is not known. \citet{Kanduri2017}
+when the reference provenance is not known. Kanduri \textit{et al.}~\cite{Kanduri2017}
 documented issues surrounding the lack of provenance metadata for BED,
 WIG, and GFF files, and described this problem as a ``major time
-thief'' in bioinformatics. Likewise, \citet{Simoneau2019} described
+thief'' in bioinformatics. Likewise, Simoneau and
+Scott~\cite{Simoneau2019} described 
 information on genome assembly and annotation as ``essential'' for
 describing the computational analysis of RNA-seq data, and contended
 that, ``no study using RNA-seq should be published without these
@@ -82,14 +83,14 @@ provenance is specified in configuration files and correct metadata
 can therefore be assembled and attached programmatically to downstream
 outputs \citep{arkas,Orjuelag2019,pepkit,basejump}.
 
-In 2015, \citet{Belhajjame2015} introduced the concept of a ``Research
+In 2015, Belhajjame \textit{et al.}~\cite{Belhajjame2015} introduced the concept of a ``Research
 Object'', an aggregation of data and supporting metadata produced
 within a specified scientific workflow. Their formulation was
 system-neutral, describing the requirements for production of a
 Research Object. The requirements touch on topics introduced above,
 such as the need to preserve data inputs, software versions, as well
 as traces of the provenance of data as it moves through the scientific
-workflow. \citet{Belhajjame2015} summarized literature in the field of
+workflow. Belhajjame \textit{et al.}~\cite{Belhajjame2015} summarized literature in the field of
 computational reproducibility and efforts toward extensive provenance
 tracking. The developers of the Common Workflow Language (CWL) \citep{cwl}
 have defined a profile, CWLProv, for recording provenance through a
@@ -103,7 +104,7 @@ role in assuring reproducibility of workflows, the developers of
 CWLProv recommended the use of hashed checksums for identifiers of data
 (including any reference sequence), similar to the use of checksums in
 the CRAM format and VR-Spec, for identifying the reference or variant
-sequences. \citet{Gruning2018} recommended combining systems such as
+sequences. Gruning \textit{et al.}~\cite{Gruning2018} recommended combining systems such as
 Galaxy for encapsulating analysis tools with systems for tracking and
 capturing parameters and source data provenance to provide full
 computational reproducibility.
