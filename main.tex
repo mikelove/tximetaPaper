@@ -148,7 +148,7 @@ below. A diagram of the following workflow is shown in Figure
 
 \begin{figure}
   \centering
-  \includegraphics[width=.6\textwidth]{diagram.pdf}
+  \includegraphics[width=\textwidth]{diagram.pdf}
   \caption{
     {\bf Flowchart of Salmon quantification followed by tximeta.}
     The quantification and import pipeline results in a
@@ -236,10 +236,10 @@ before, one of two steps will occur:
   The set of pre-computed checksums span the stable releases from
   these sources for the years 2015 -- 2019. (NR) - not recommended: we
   recommend combination of coding and non-coding transcripts for
-  accurate RNA-seq quantification; $\dagger$ - RefSeq releases p13 and
-  p6 for human and mouse respectively are currently \textit{latest},
-  which means they are subject to updates under the same release
-  number, and so not stable releases.
+  accurate RNA-seq quantification; $\dagger$ - RefSeq assembly
+  versions p13 and p6 for human and mouse respectively are currently
+  ``latest'', and are subject to sequence updates under the same
+  version number, and so not stable releases.
 \end{flushleft}
 \label{tab1}
 \end{table}
@@ -470,14 +470,10 @@ two ranges, and suppressing range names):
     rowRanges(se)
 
     ## GRanges object with 143492 ranges and 3 metadata columns:
-    ##                    seqnames    ranges strand |
-    ##                       <Rle> <IRanges>  <Rle> |
-    ##   TRINITY_DN114791_c0_g1_i1    1-2308      + |
-    ##   TRINITY_DN114724_c0_g2_i1     1-635      - |
-    ##        tx_id
-    ##    <integer>
-    ##         1290
-    ##         1283
+    ##                    seqnames    ranges strand |     tx_id
+    ##                       <Rle> <IRanges>  <Rle> | <integer>
+    ##   TRINITY_DN114791_c0_g1_i1    1-2308      + |      1290
+    ##   TRINITY_DN114724_c0_g2_i1     1-635      - |      1283
     ##                                       gene_id
     ##                               <CharacterList>
     ##   ORF Transcript_...type:complete len:190 (+)
