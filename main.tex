@@ -137,10 +137,10 @@ reproducibility'' \cite{Peng2011}.
 
 \section*{Design and Implementation}
 
-Tximeta has been developed to work with output from Salmon, Sailfish,
-or Alevin quantification tools \cite{sailfish,salmon,alevin},
+Tximeta has been developed to work with output from Salmon
+or Alevin quantification tools \cite{salmon,alevin},
 although the implementation could be extended to other quantification
-tools that store a hashed checksum within the index and propagate this
+tools that store the appropriate hashed checksum within the index and propagate this
 checksum to the sample output metadata. Without loss of generality, we
 describe the implementation referring to Salmon quantification data
 below. A diagram of the following workflow is shown in Figure
@@ -152,7 +152,7 @@ below. A diagram of the following workflow is shown in Figure
   \caption{
     {\bf Flowchart of Salmon quantification followed by tximeta.}
     The quantification and import pipeline results in a
-    SummarizedExperiment with reference transcript provenance
+    SummarizedExperiment object with reference transcript provenance
     metadata added by tximeta (see Design and Implementation).}
   \label{fig:diagram}
 \end{figure}
@@ -165,7 +165,7 @@ necessarily equal to the complete set of possible RNA transcripts in
 the sample. Currently, both the SHA-256 and SHA-512 \cite{sha1}
 checksums are computed on the reference cDNA sequences alone, with
 transcript sequences concatenated together with the empty string (the
-SHA-256 checksum is currently taken as the main identifier). Future
+SHA-256 checksum is currently taken as the primary identifier). Future
 implementations of Salmon and tximeta may use alternate hash functions
 for compatibility with larger efforts toward stable identifiers for
 sequence collections, for example, computing a hashed checksum over a
@@ -239,7 +239,7 @@ before, one of two steps will occur:
   accurate RNA-seq quantification; $\dagger$ - RefSeq assembly
   versions p13 and p6 for human and mouse respectively are currently
   ``latest'', and are subject to sequence updates under the same
-  version number, and so not stable releases.
+  assembly version, and so not stable releases.
 \end{flushleft}
 \label{tab1}
 \end{table}
@@ -264,7 +264,7 @@ about the samples, if provided by the user, is automatically attached
 to the columns of the SummarizedExperiment object. Additional metadata
 attached by tximeta includes all of the per-sample metadata saved from
 Salmon (e.g. library type, percent reads mapping, etc.), information
-about the reference transcriptome and file paths or ftp URLs for the source file(s)
+about the reference transcriptome and file paths or FTP URLs for the source file(s)
 for FASTA and GTF/GFF, and the package versions for tximeta and other
 Bioconductor packages used during the parsing of the GTF/GFF. At any
 later point in time, annotation tasks can be performed by on-demand
@@ -282,10 +282,12 @@ transcriptomes. For such cases, we have developed functionality in
 tximeta to formally link a given hashed checksum to a publicly
 available FASTA file(s) and a GTF/GFF file. The
 \texttt{makeLinkedTxome} function can be called, pointing to the
-Salmon index as well as the locations of the FASTA and GTF/GFF files, and
-this will perform two operations: (1) it will add a row to a custom hash
+transcriptome index as well as to the locations of the FASTA files and
+GTF/GFF file, and this will perform two operations:
+(1) it will add a row to a custom hash
 table, managed by BiocFileCache, and (2) it will produce a JSON file
-that can be shared or uploaded, which links the transcriptome checksum
+that can be shared or uploaded to public repositories,
+which links the transcriptome checksum
 with the source locations. When the JSON file is provided to
 \texttt{loadLinkedTxome} on another machine, it will add the relevant
 row to tximeta's custom hash table, so tximeta will then recognize and
@@ -293,8 +295,9 @@ automatically populate metadata in a similar manner to if the checksum
 matched with a transcriptome in tximeta's built-in hash
 table. Finally, the cache location for tximeta, managed by
 BiocFileCache, can be shared across users on a cluster, for example,
-so that parsed databases, range objects, and custom hash tables
-created by any one user can be leveraged by all other users.
+such that parsed databases, range objects, and custom hash tables
+created by any one user can be leveraged by all other users in the
+same group.
 
 \section*{Results}
 
@@ -316,7 +319,8 @@ experiment).
 
 For example, in the fishpond Bioconductor package vignette \cite{swish}, the
 following \texttt{coldata} is read into R in the beginning of the
-analysis (here just showing the first two rows and five columns):
+analysis (here just showing the first two rows and five columns). The
+samples are from a human macrophage RNA-seq experiment \cite{alasoo}.
 
 \begin{verbatim}
     ##            names sample_id line_id replicate condition_name
@@ -339,15 +343,16 @@ Salmon output directory names.
 It is expected that the quantification files are located
 within the original directory structure created by Salmon and with all
 the associated metadata files. The next
-step is to provide this table to the \texttt{tximeta} function:
+step is to provide this table to the \texttt{tximeta} function, which
+returns a SummarizedExperiment object.
 
 \begin{verbatim}
     se <- tximeta(coldata)
 \end{verbatim}
 
-Tximeta will then print the following messages as the files are being
+Tximeta will print the following messages as the files are being
 imported (if a match is found, and if this checksum has been seen
-before by tximeta):
+before by tximeta).
 
 \begin{verbatim}
     ## importing quantifications reading in files with read_tsv 
@@ -358,7 +363,7 @@ before by tximeta):
 \end{verbatim}
 
 If the checksum matched one of the custom transcriptome checksums that
-was created of loaded by the user, the function would report,
+was created or loaded by the user, the function would report,
 ``\texttt{found matching linked transcriptome}''. A demonstration of
 such a workflow is given in the following section.
 
@@ -370,7 +375,7 @@ transcript or gene ranges can be easily manipulated using the
 GenonicRanges or plyranges packages in the Bioconductor ecosystem
 \cite{granges,Lee2019}. For example, to subset the object to only
 those transcripts that overlap a range defined in a variable
-\texttt{x}:
+\texttt{x}, the following line of code can be used.
 
 \begin{verbatim}
     se_sub <- se[se %over% x,]
@@ -391,7 +396,7 @@ plyrangesTximetaCaseStudy package \cite{casestudy}.
 \subsection*{Importing data from a \textit{de novo} transcriptome}
 
 It is also possible to use tximeta to import quantification data when
-the transcriptome does not belong to those in the set of pre-computed
+the transcriptome does not belong to those in the set covered by pre-computed
 checksums (Table \ref{tab1}). This case may occur because the
 reference transcriptome is from another source or another organism
 than those currently in this pre-computed set, or because the
@@ -401,12 +406,12 @@ which changes the checksum, or because the entire transcriptome has
 been assembled \textit{de novo}. In all of these cases, tximeta
 provides a mechanism for local metadata linkage, as well as a formal
 mechanism for sharing the link between the quantification data and
-publicly available reference transcript files.
+publicly available reference transcriptome files.
 
 The key concept used in the case when the checksum is not part of the
 pre-computed set, is that of a link constructed between the
 transcriptome used for quantification via its hashed checksum and
-publicly accessible metadata locations (i.e. permalinks for the FASTA
+publicly available metadata locations (i.e. permalinks for the FASTA
 and GTF/GFF files). This link is created by the tximeta function
 \texttt{makeLinkedTxome} which stores the reference transcriptome's
 checksum in a custom hash table managed by BiocFileCache, along with
@@ -423,7 +428,7 @@ GitHub \cite{denovo}. Here, the FASTA sequence of the
 posted to Zenodo \cite{killi-fasta,killi-gff}, and
 permalinks are used to point to those 
 records. After the reference transcripts have been indexed by Salmon,
-the following tximeta function can be called within R:
+the following tximeta function can be called within R.
 
 \begin{verbatim}
 makeLinkedTxome(
@@ -447,7 +452,7 @@ JSON file can be loaded with \texttt{loadLinkedTxome}, and it will
 likewise store an entry in the custom hash table of the machine where
 it is loaded. In either case, when the quantification data \citep{killi-quant} is later
 imported using tximeta, the checksum will be recognized and the
-relevant metadata attached to the SummarizedExperiment object output:
+relevant metadata attached to the SummarizedExperiment object output.
 
 \begin{verbatim}
    coldata <- data.frame(files, names) 
@@ -466,7 +471,7 @@ GTF/GFF object, including any metadata about those transcripts. In the
 case of the killifish RNA-seq experiment, the transcript ranges have
 length, strand, and an informative column \texttt{gene\_id}. The ranges
 of the SummarizedExperiment can be examined (here only showing the first
-two ranges, and suppressing range names):
+two ranges, and suppressing range names).
 
 \begin{verbatim}
     rowRanges(se)
@@ -492,7 +497,7 @@ followed by (2) downstream comparison of checksums with a hash table
 (here, by tximeta), automated downloading and parsing of the
 appropriate metadata, and attachment to a rich object that bundles
 data and reference sequence metadata. The software is implemented
-within the R/Bioconductor environment for data analysis, and leverages
+within the R/Bioconductor environment for genomic data analysis, and leverages
 a number of existing Bioconductor packages for parsing annotation
 files, metadata storage, and genomic range manipulation
 \cite{bioc,ensembldb,biocfilecache,granges}. The tximeta package is
@@ -512,7 +517,7 @@ supported by a future reference sequence retrieval API (GENCODE
 releases since 2015 are already fully supported by
 tximeta). Furthermore, we provide a mechanism for formally linking
 those reference transcripts not in any pre-computed hash table
-(e.g. \textit{de novo} transcriptomes) with publicly accessible
+(e.g. \textit{de novo} transcriptomes) with publicly available
 metadata. Finally, we plan to develop tximeta to support provenance
 identification at the level of alleles, by combining our current
 reference transcript identification with transcript variant
@@ -522,23 +527,23 @@ Specification \cite{vr}.
 All bioinformatic software packages have a finite lifespan, including
 the package described here. We join with others in
 recommending the underlying paradigm of embedding reference sequence
-checksums in sample file metadata, followed by downstream database
+checksums in sample output metadata, followed by downstream database
 lookup of checksums, and identification of reference sequence
 metadata. This paradigm should be adopted by other bioinformatic
 software that outputs any data that refers to a reference
 sequence. This workflow has the advantage of not requiring additional
 effort or actions on the part of the upstream bioinformatic
-analyst. Otherwise, we risk exposing downstream bioinformatic analysts
+analyst. Otherwise, we risk exposing downstream analysts
 to the ``major time thief'' of \textit{post hoc} guesswork involved in
-identifying the reference sequence provenance of genomic datasets
-shared publicly but without this critical information
-\cite{Kanduri2017}.
+identifying the provenance of datasets shared publicly but without
+critical metadata \cite{Kanduri2017}.
 
 \section*{Data Availability}
 
 All datasets used in this manuscript are available as Bioconductor
 data packages used in the tximeta or fishpond package vignettes, or
-have been deposited to Zenodo:
+in the case of the \textit{de novo} transcriptome analysis, have been
+deposited to Zenodo: 
 
 \begin{itemize}
   \item Quantification data (Salmon output directory, tar.gz) \cite{killi-quant} \\
