@@ -42,7 +42,10 @@ Scott~\cite{Simoneau2019} described
 information on genome assembly and annotation as ``essential'' for
 describing the computational analysis of RNA-seq data, and contended
 that, ``no study using RNA-seq should be published without these
-methodological details.''
+methodological details.'' \hl{Simoneau and co-authors have recently
+performed a detailed analysis of hundreds of published RNA-seq studies
+finding that the majority did not include annotation source and release
+information, thus hindering reproducible analysis}~\cite{Simoneau2019BIB}.
 
 A number of frameworks have been proposed that would solve the problem
 of tracking provenance in a bioinformatic analysis -- provenance in
@@ -138,7 +141,7 @@ reproducibility'' \cite{Peng2011}.
 \section*{Design and Implementation}
 
 Tximeta has been developed to work with output from Salmon
-or Alevin quantification tools \cite{salmon,alevin},
+or alevin quantification tools \cite{salmon,alevin},
 although the implementation could be extended to other quantification
 tools that store the appropriate hashed checksum within the index and propagate this
 checksum to the sample output metadata. Without loss of generality, we
@@ -153,7 +156,10 @@ below. A diagram of the following workflow is shown in Figure
     {\bf Flowchart of Salmon quantification followed by tximeta.}
     The quantification and import pipeline results in a
     SummarizedExperiment object with reference transcript provenance
-    metadata added by tximeta (see Design and Implementation).}
+    metadata added by tximeta (see Design and Implementation).
+    \hl{The SummarizedExperiment object contains estimated counts and
+    other relevant metadata, and can be used with downstream
+    statistical packages.}}
   \label{fig:diagram}
 \end{figure}
 
@@ -180,13 +186,47 @@ parameters. The entire directory, not just the text file with the
 quantification information, should be considered the output of
 the quantification tool.
 
+\begin{table}[t]
+  \small
+  \centering
+  \caption{\bf{Comparison of tximeta to related software.}}
+\begin{tabular}{llccc} 
+  \hline
+  \bf{Software} & \bf{Domain} & \bf{Ranges} & \bf{Release} & \bf{Post-hoc} \\
+   & & \bf{autom.}  & \bf{autom.}  & \bf{lookup}   \\
+   & & \bf{attach.} & \bf{attach.} & \bf{possible} \\
+  \thickhline
+  \underline{tximeta} & RNA-seq import                & \checkmark & \checkmark & \checkmark \\
+  tximport \cite{tximport} & RNA-seq import           & & & \\
+  \hline
+  htseq \cite{htseq} & RNA-seq count.                 & & & \\
+  featureCounts \cite{featurecounts} & RNA-seq count. & \checkmark & & \\
+  summarizeOverlaps \cite{granges} & RNA-seq count.   & \checkmark & & \\
+  \hline
+  Arkas \cite{arkas} & RNA-seq analysis               & \checkmark & & \\
+  ARMOR \cite{Orjuelag2019} & RNA-seq analysis        & \checkmark & & \\
+  \hline
+  pepkit \cite{pepkit} & Workflow mngmt.              & \checkmark & & \\
+  basejump \cite{basejump} & Utilities                & & & \\
+  Refgenie \cite{refgenie} & Genome mngmt.            & & & \checkmark \\
+  CRAM+RefGet \cite{cram,refget} & Genome alignment   & & & \checkmark \\
+  CWLProv \cite{Khan2018} & Provenance tracing        & & & \checkmark \\
+\hline
+\end{tabular}
+\begin{flushleft}
+  \hl{Text text text text text text text (Abbreviations:)}
+\end{flushleft}
+\label{tab:comp}
+\end{table}
+
+
 During import of quantification data into R/Bioconductor
 \cite{bioc}, leveraging the existing tximport package
 \cite{tximport}, tximeta reads the quantification data, as well as
 the transcriptome index checksum, and compares this checksum to a hash
 table of pre-computed checksums of a subset of commonly used reference
 transcriptomes (human, mouse, and fruit fly reference transcripts from
-GENCODE, Ensembl, and RefSeq, see Table \ref{tab1}), as well as to a
+GENCODE, Ensembl, and RefSeq, see Table \ref{tab:hash}), as well as to a
 custom hash table which will be described below. Tximeta verifies that
 the checksum and therefore the reference transcriptome sequence is
 identical across all samples being imported. If there is a match of
@@ -204,45 +244,14 @@ before, one of two steps will occur:
   locally cached SQLite database of the parsed GTF/GFF file, as well as a
   GRanges object of the transcript locations \cite{granges}. The
   local cache is managed by the BiocFileCache Bioconductor package
-  \cite{biocfilecache}.
+  \cite{biocfilecache}. \hl{If the database for the correct Ensembl
+    release is available using Bioconductor's AnnotationHub
+    infrastructure, this pre-parsed database will be downloaded
+    instead of downloading and parsing the GTF.}
 \item (Subsequently) - Tximeta loads the locally cached versions of
   metadata (the transcript ranges, or additionally the SQLite database
   on demand for further annotation tasks).
 \end{itemize}
-
-\begin{table}[t]
-  \centering
-  \caption{\bf{Pre-computed reference transcripts checksums in tximeta as of Fall 2019.}}
-\begin{tabular}{llll} 
-  \hline
-  \bf{Source} & \bf{Organism} & \bf{Releases} & \bf{Transcript sequence file} \\
-  \thickhline
-  GENCODE & \textit{Homo sapiens} & 23 -- 31 & transcripts.fa \\
-  GENCODE & \textit{Mus musculus} & M6 -- M22 & transcripts.fa \\
-  \hline
-  Ensembl & \textit{Homo sapiens} & 76 -- 97 & *.cdna.all.fa (NR) \\
-  Ensembl & \textit{Mus musculus} & 76 -- 97 & *.cdna.all.fa (NR) \\
-  Ensembl & \textit{Drosophila melanogaster} & 79 -- 97 & *.cdna.all.fa (NR) \\
-  \hline
-  Ensembl & \textit{Homo sapiens} & 76 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
-  Ensembl & \textit{Mus musculus} & 76 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
-  Ensembl & \textit{Drosophila melanogaster} & 79 -- 97 & *.cdna.all.fa + *.ncrna.fa \\
-  \hline
-  RefSeq & \textit{Homo sapiens} & p1 -- p12$\dagger$ & *\_rna.fa \\
-  RefSeq & \textit{Mus musculus} & p2 -- p5$\dagger$ & *\_rna.fa \\
-\hline
-\end{tabular}
-\begin{flushleft}
-  The set of pre-computed checksums span the stable releases from
-  these sources for the years 2015 -- 2019. (NR) - not recommended: we
-  recommend combination of coding and non-coding transcripts for
-  accurate RNA-seq quantification; $\dagger$ - RefSeq assembly
-  versions p13 and p6 for human and mouse respectively are currently
-  ``latest'', and are subject to sequence updates under the same
-  assembly version, and so not stable releases.
-\end{flushleft}
-\label{tab1}
-\end{table}
 
 After loading the appropriate annotation metadata, tximeta outputs a
 SummarizedExperiment object \cite{granges}, a class in the
@@ -271,6 +280,40 @@ later point in time, annotation tasks can be performed by on-demand
 retrieval of the cached databases, for example summarization of
 transcript-level information to the gene level, conversion of
 transcript or gene identifiers, or addition of exon ranges.
+
+\begin{table}[t]
+  \centering
+  \caption{\bf{Pre-computed reference transcripts checksums in tximeta as of Fall 2019.}}
+\begin{tabular}{llll} 
+  \hline
+  \bf{Source} & \bf{Organism} & \bf{Releases} & \bf{Transcript sequence file} \\
+  \thickhline
+  GENCODE & \textit{Homo sapiens} & 23 -- 32 & transcripts.fa \\
+  GENCODE & \textit{Mus musculus} & M6 -- M23 & transcripts.fa \\
+  \hline
+  Ensembl & \textit{Homo sapiens} & 76 -- 98 & *.cdna.all.fa (NR) \\
+  Ensembl & \textit{Mus musculus} & 76 -- 98 & *.cdna.all.fa (NR) \\
+  Ensembl & \textit{Drosophila melanogaster} & 79 -- 98 & *.cdna.all.fa (NR) \\
+  \hline
+  Ensembl & \textit{Homo sapiens} & 76 -- 98 & *.cdna.all.fa + *.ncrna.fa \\
+  Ensembl & \textit{Mus musculus} & 76 -- 98 & *.cdna.all.fa + *.ncrna.fa \\
+  Ensembl & \textit{Drosophila melanogaster} & 79 -- 98 & *.cdna.all.fa + *.ncrna.fa \\
+  \hline
+  RefSeq & \textit{Homo sapiens} & p1 -- p12$\dagger$ & *\_rna.fa \\
+  RefSeq & \textit{Mus musculus} & p2 -- p5$\dagger$ & *\_rna.fa \\
+\hline
+\end{tabular}
+\begin{flushleft}
+  The set of pre-computed checksums span the stable releases from
+  these sources for the years 2015 -- 2019. (NR) - not recommended: we
+  recommend combination of coding and non-coding transcripts for
+  accurate RNA-seq quantification; $\dagger$ - RefSeq assembly
+  versions p13 and p6 for human and mouse respectively are currently
+  ``latest'', and are subject to sequence updates under the same
+  assembly version, and so not stable releases.
+\end{flushleft}
+\label{tab:hash}
+\end{table}
 
 A key aspect of the tximeta workflow described here is that it does
 not rely on self-reporting of the reference provenance for
@@ -308,7 +351,7 @@ be followed in the tximeta or fishpond Bioconductor package
 vignettes. Here we demonstrate the case where the Salmon files were
 quantified against a transcriptome that is in tximeta's pre-computed
 hash table (for a list of supported transcriptomes as of the writing
-of this manuscript, see Table \ref{tab1}). Import begins by specifying
+of this manuscript, see Table \ref{tab:hash}). Import begins by specifying
 a sample table (the ``column data'', as the columns of the
 SummarizedExperiment object correspond to samples from the
 experiment).
@@ -344,31 +387,22 @@ It is expected that the quantification files are located
 within the original directory structure created by Salmon and with all
 the associated metadata files. The next
 step is to provide this table to the \texttt{tximeta} function, which
-returns a SummarizedExperiment object.
+returns a SummarizedExperiment object. \hl{If a match of the hashed
+checksum is found, tximeta will print a message identifying the
+transcriptome and will attach relevant metadata including the genomic
+positions of the transcripts.}
 
 \begin{verbatim}
     se <- tximeta(coldata)
 \end{verbatim}
 
-Tximeta will print the following messages as the files are being
-imported (if a match is found, and if this checksum has been seen
-before by tximeta).
-
-\begin{verbatim}
-    ## importing quantifications reading in files with read_tsv 
-    ## found matching transcriptome: 
-    ## [ GENCODE - Homo sapiens - release 97 ]
-    ## loading existing EnsDb created: 2019-01-01 12:34:56 
-    ## loading existing transcript ranges created: 2019-01-01 12:34:56
-\end{verbatim}
-
-If the checksum matched one of the custom transcriptome checksums that
-was created or loaded by the user, the function would report,
-``\texttt{found matching linked transcriptome}''. A demonstration of
-such a workflow is given in the following section.
-
-The SummarizedExperiment object, \texttt{se}, that is returned by
-tximeta can then be passed to various downstream packages such as
+\hl{The SummarizedExperiment object, \texttt{se}, that is returned by
+tximeta contains information including the estimated counts,
+abundances (in TPM), and the effective lengths of the transcripts.
+It also contains the metadata about the samples in the
+\texttt{colData} slot and metadata about the transcript ranges in the
+\texttt{rowRanges} slot.} The SummarizedExperiment object
+can be passed to various downstream packages such as
 DESeq2, edgeR, limma-voom, or fishpond, with example code in the
 tximeta package vignette \cite{deseq2,edger,limma,voom,swish}. The
 transcript or gene ranges can be easily manipulated using the
@@ -397,7 +431,7 @@ plyrangesTximetaCaseStudy package \cite{casestudy}.
 
 It is also possible to use tximeta to import quantification data when
 the transcriptome does not belong to those in the set covered by pre-computed
-checksums (Table \ref{tab1}). This case may occur because the
+checksums (Table \ref{tab:hash}). This case may occur because the
 reference transcriptome is from another source or another organism
 than those currently in this pre-computed set, or because the
 transcriptome has been modified by the addition of non-reference
@@ -453,16 +487,12 @@ likewise store an entry in the custom hash table of the machine where
 it is loaded. In either case, when the quantification data \citep{killi-quant} is later
 imported using tximeta, the checksum will be recognized and the
 relevant metadata attached to the SummarizedExperiment object output.
+\hl{After the above function has been run, or \texttt{loadLinkedTxome} has
+been run, then the steps proceed as before, calling \texttt{tximeta}
+with an argument that specifies the sample table.}
 
 \begin{verbatim}
-   coldata <- data.frame(files, names) 
    se <- tximeta(coldata)
-
-   ## importing quantifications reading in files with read_tsv
-   ## found matching linked transcriptome: 
-   ## [ dammit - Fundulus rathbuni - release 0 ] 
-   ## loading existing TxDb created: 2018-12-13 18:26:20 
-   ## generating transcript ranges
 \end{verbatim}
 
 After running \texttt{tximeta}, the SummarizedExperiment object
