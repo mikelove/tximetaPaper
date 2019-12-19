@@ -187,34 +187,43 @@ quantification information, should be considered the output of
 the quantification tool.
 
 \begin{table}[t]
-  \small
   \centering
   \caption{\bf{Comparison of tximeta to related software.}}
 \begin{tabular}{llccc} 
   \hline
   \bf{Software} & \bf{Domain} & \bf{Ranges} & \bf{Release} & \bf{Post-hoc} \\
-   & & \bf{autom.}  & \bf{autom.}  & \bf{lookup}   \\
-   & & \bf{attach.} & \bf{attach.} & \bf{possible} \\
+   & & \bf{autom.}   & \bf{autom.}   & \bf{lookup}   \\
+   & & \bf{attached} & \bf{attached} & \bf{possible} \\
   \thickhline
   \underline{tximeta} & RNA-seq import                & \checkmark & \checkmark & \checkmark \\
   tximport \cite{tximport} & RNA-seq import           & & & \\
   \hline
+  Arkas \cite{arkas} & RNA-seq analysis               & & & \\
+  ARMOR* \cite{Orjuelag2019} & RNA-seq analysis       & \checkmark & \checkmark & \checkmark \\
+  \hline
   htseq \cite{htseq} & RNA-seq count.                 & & & \\
   featureCounts \cite{featurecounts} & RNA-seq count. & \checkmark & & \\
-  summarizeOverlaps \cite{granges} & RNA-seq count.   & \checkmark & & \\
+  summarizeOverlaps \cite{granges} & RNA-seq count.   & \checkmark & \checkmark & \\
   \hline
-  Arkas \cite{arkas} & RNA-seq analysis               & \checkmark & & \\
-  ARMOR \cite{Orjuelag2019} & RNA-seq analysis        & \checkmark & & \\
-  \hline
-  pepkit \cite{pepkit} & Workflow mngmt.              & \checkmark & & \\
-  basejump \cite{basejump} & Utilities                & & & \\
-  Refgenie \cite{refgenie} & Genome mngmt.            & & & \checkmark \\
-  CRAM+RefGet \cite{cram,refget} & Genome alignment   & & & \checkmark \\
-  CWLProv \cite{Khan2018} & Provenance tracing        & & & \checkmark \\
+  pepkit \cite{pepkit} & Workflow mngmt.              & - & - & \\
+  basejump \cite{basejump} & Metadata utilities       & - & - & \\
+  Refgenie \cite{refgenie} & Genome mngmt.            & - & - & \checkmark \\
+  CRAM+RefGet \cite{cram,refget} & Read alignment     & - & - & \checkmark \\
+  CWLProv \cite{Khan2018} & Workflow tracing          & - & - & \checkmark \\
 \hline
 \end{tabular}
 \begin{flushleft}
-  \hl{Text text text text text text text (Abbreviations:)}
+  \hl{Tximeta is compared to related software, grouped by domain.
+    Columns indicate if the transcript or gene ranges are automatically
+    attached the output of the software, whether the transcriptome and
+    genome release information is automatically attached, and whether
+    post-hoc lookup of transcriptome-related metadata is possible from
+    publicly shared data files or objects.
+    A hyphen (-) indicates that the column is not directly applicable
+    to the software.
+    *Note that ARMOR imports tximeta for building SummarizedExperiment
+    objects with transcript ranges and release information
+    automatically attached. (Abbreviations:)}
 \end{flushleft}
 \label{tab:comp}
 \end{table}
