@@ -80,63 +80,68 @@ number of reference sequences is Refgenie. Refgenie is a tool that
 helps with management of bundles of files associated with reference
 genomes, and facilitates sharing provenance information across
 research groups, in that the generation of resources is scripted
-\cite{refgenie}. Arkas, ARMOR, pepkit, and basejump are all
+\cite{refgenie}.
+\hl{TODO fix this} Arkas, ARMOR, pepkit, and basejump are all
 frameworks for automating bioinformatic analyses, where reference
 provenance is specified in configuration files and correct metadata
 can therefore be assembled and attached programmatically to downstream
 outputs \cite{arkas,Orjuelag2019,pepkit,basejump}.
 
-In 2015, Belhajjame \textit{et al.}~\cite{Belhajjame2015} introduced the concept of a ``Research
-Object'', an aggregation of data and supporting metadata produced
-within a specified scientific workflow. Their formulation was
-system-neutral, describing the requirements for production of a
-Research Object. The requirements touch on topics introduced above,
-such as the need to preserve data inputs, software versions, as well
-as traces of the provenance of data as it moves through the scientific
-workflow. Belhajjame \textit{et al.}~\cite{Belhajjame2015} summarized literature in the field of
+In 2015, Belhajjame \textit{et al.}~\cite{Belhajjame2015} introduced
+the concept of a ``Research Object'', an aggregation of data and
+supporting metadata produced within a specified scientific
+workflow. Their formulation was system-neutral, describing the
+requirements for production of a Research Object. The requirements
+touch on topics introduced above, such as the need to preserve data
+inputs, software versions, as well as traces of the provenance of data
+as it moves through the scientific workflow. Belhajjame
+\textit{et al.}~\cite{Belhajjame2015} summarized literature in the field of
 computational reproducibility and efforts toward extensive provenance
-tracking. The developers of the Common Workflow Language (CWL) \cite{cwl}
-have defined a profile, CWLProv, for recording provenance through a
-workflow run, and have a number of implementations, including within
-cwltool \cite{Khan2018}. The developers of CWLProv emphasized the
-importance of tracking versions of input data, such as reference
-genomes or variant databases in a scientific workflow, and they
-suggested to use and store stable identifiers of all data and software,
-as well as the workflow itself. As identifiers play such a crucial
-role in assuring reproducibility of workflows, the developers of
-CWLProv recommended the use of hashed checksums for identifiers of data
-(including any reference sequence), similar to the use of checksums in
-the CRAM format and VR-Spec, for identifying the reference or variant
-sequences. Gruning \textit{et al.}~\cite{Gruning2018} recommended combining systems such as
-Galaxy for encapsulating analysis tools with systems for tracking and
+tracking. The developers of the Common Workflow Language (CWL)
+\cite{cwl} have defined a profile, CWLProv, for recording provenance
+through a workflow run, and have a number of implementations,
+including within cwltool \cite{Khan2018}. The developers of CWLProv
+emphasized the importance of tracking versions of input data, such as
+reference genomes or variant databases in a scientific workflow, and
+they suggested to use and store stable identifiers of all data and
+software, as well as the workflow itself. As identifiers play such a
+crucial role in assuring reproducibility of workflows, the developers
+of CWLProv recommended the use of hashed checksums for identifiers of
+data (including any reference sequence), similar to the use of
+checksums in the CRAM format and VR-Spec, for identifying the
+reference or variant sequences. Gruning
+\textit{et al.}~\cite{Gruning2018} recommended combining systems such as Galaxy
+for encapsulating analysis tools with systems for tracking and
 capturing parameters and source data provenance to provide full
 computational reproducibility.
 
-Here we describe an R/Bioconductor package, tximeta, for identification
-of reference transcript provenance in RNA-seq analyses via sequence
-checksums. It is situated among other solutions for facilitating
-computational reproducibility described above, with some automation of
-routine tasks, such as conversion of transcript and gene names, but
-short of full automation of analyses as in Arkas and ARMOR. Tximeta
-captures the versions of the software packages used in import of
-quantification data, but does not provide full provenance tracking
-throughout downstream tasks as in the Research Object specification or
-in CWLProv. One desirable aspect of tximeta is that -- through the use
-of hashed checksums of reference transcripts and lookup operations
-similar to those performed by refget -- our implementation can be used
-to identify the reference provenance \textit{post hoc} on various
-shared or public datasets, regardless of whether the original analyst
-kept or shared accurate records of the reference transcripts that were
-used. Therefore it can provide some utility for bioinformatic analysts
-without requiring full buy-in of a particular workflow execution
-framework.
-Tximeta is similar in implementation to the CRAM format in the use
-of hashed checksums, but identifies the transcript sequences used
-during sample quantification rather than the genome sequence used
-during alignment.
-We see tximeta as a piece of a larger
-effort to create software systems that are ``more amenable to
-reproducibility'' \cite{Peng2011}.
+Here we describe an R/Bioconductor package, tximeta, for
+identification of reference transcript provenance in RNA-seq analyses
+via sequence checksums. It is situated among other solutions for
+facilitating computational reproducibility described above, with some
+automation of routine tasks, such as conversion of transcript and gene
+names, but short of full automation of \hl{downstream statistical} analyses
+as in Arkas and ARMOR. Tximeta captures the versions of the software
+packages used in import of quantification data, but does not provide
+full provenance tracking throughout downstream tasks as in the
+Research Object specification or in CWLProv. One \hl{unique} aspect of
+tximeta is that -- through the use of hashed checksums of reference
+transcripts and lookup operations similar to those performed by refget
+-- our implementation can be used to identify the reference provenance
+\textit{post hoc} on various shared or public datasets, regardless of
+whether the original analyst kept or shared accurate records of the
+reference transcripts that were used. Therefore it can provide some
+utility for bioinformatic analysts without requiring full buy-in of a
+particular workflow execution framework.
+\hl{\textit{Post hoc} transcriptome identification is a novel
+functionality not offered by alternative exiting pipelines for
+importing or creating RNA-seq count matrices in R/Bioconductor.}
+Tximeta is similar in implementation to the CRAM format in the use of
+hashed checksums, but identifies the transcript sequences used during
+\hl{RNA-seq} sample quantification rather than the genome sequence
+used during alignment. We see tximeta as a piece of a larger effort to
+create software systems that are ``more amenable to reproducibility''
+\cite{Peng2011}.
 
 \section*{Design and Implementation}
 
@@ -186,49 +191,6 @@ parameters. The entire directory, not just the text file with the
 quantification information, should be considered the output of
 the quantification tool.
 
-\begin{table}[t]
-  \centering
-  \caption{\bf{Comparison of tximeta to related software.}}
-\begin{tabular}{llccc} 
-  \hline
-  \bf{Software} & \bf{Domain} & \bf{Ranges} & \bf{Release} & \bf{Post-hoc} \\
-   & & \bf{autom.}   & \bf{autom.}   & \bf{lookup}   \\
-   & & \bf{attached} & \bf{attached} & \bf{possible} \\
-  \thickhline
-  \underline{tximeta} & RNA-seq import                & \checkmark & \checkmark & \checkmark \\
-  tximport \cite{tximport} & RNA-seq import           & & & \\
-  \hline
-  Arkas \cite{arkas} & RNA-seq analysis               & & & \\
-  ARMOR* \cite{Orjuelag2019} & RNA-seq analysis       & \checkmark & \checkmark & \checkmark \\
-  \hline
-  htseq \cite{htseq} & RNA-seq count.                 & & & \\
-  featureCounts \cite{featurecounts} & RNA-seq count. & \checkmark & & \\
-  summarizeOverlaps \cite{granges} & RNA-seq count.   & \checkmark & \checkmark & \\
-  \hline
-  pepkit \cite{pepkit} & Workflow mngmt.              & - & - & \\
-  basejump \cite{basejump} & Metadata utilities       & - & - & \\
-  Refgenie \cite{refgenie} & Genome mngmt.            & - & - & \checkmark \\
-  CRAM+RefGet \cite{cram,refget} & Read alignment     & - & - & \checkmark \\
-  CWLProv \cite{Khan2018} & Workflow tracing          & - & - & \checkmark \\
-\hline
-\end{tabular}
-\begin{flushleft}
-  \hl{Tximeta is compared to related software, grouped by domain.
-    Columns indicate if the transcript or gene ranges are automatically
-    attached the output of the software, whether the transcriptome and
-    genome release information is automatically attached, and whether
-    post-hoc lookup of transcriptome-related metadata is possible from
-    publicly shared data files or objects.
-    A hyphen (-) indicates that the column is not directly applicable
-    to the software.
-    *Note that ARMOR imports tximeta for building SummarizedExperiment
-    objects with transcript ranges and release information
-    automatically attached. (Abbreviations:)}
-\end{flushleft}
-\label{tab:comp}
-\end{table}
-
-
 During import of quantification data into R/Bioconductor
 \cite{bioc}, leveraging the existing tximport package
 \cite{tximport}, tximeta reads the quantification data, as well as
@@ -271,7 +233,11 @@ million, TPM). By convention, rows correspond to genomic features
 (e.g. transcripts or genes), while columns correspond to samples. In
 addition, the rows of the matrices are linked to transcript ranges,
 embedded in an appropriate genome version (e.g. GRCh38) including
-chromosome names and lengths. If tximeta did not find a matching
+chromosome names and lengths. \hl{The SummarizedExperiment object can
+then be used with downstream statistical analysis packages in
+Bioconductor, as described in the tximeta software vignette.}
+
+If tximeta did not find a matching
 transcriptome in the hash table then a non-ranged SummarizedExperiment
 will be returned as the function's output, as the location and context
 of the transcript ranges are not known to tximeta. Comparison of
@@ -290,9 +256,122 @@ retrieval of the cached databases, for example summarization of
 transcript-level information to the gene level, conversion of
 transcript or gene identifiers, or addition of exon ranges.
 
+A key aspect of the tximeta workflow described here is that it does
+not rely on self-reporting of the reference provenance for
+\textit{post hoc} identification of the correct metadata. An exception
+to this rule is the case of a \textit{de novo} constructed
+transcriptome, or in general, use of a transcriptome that is not yet
+contained in tximeta's built-in hash table of reference
+transcriptomes. For such cases, we have developed functionality in
+tximeta to formally link a given hashed checksum to a publicly
+available FASTA file(s) and a GTF/GFF file. The
+\texttt{makeLinkedTxome} function can be called, pointing to the
+transcriptome index as well as to the locations of the FASTA files and
+GTF/GFF file, and this will perform two operations:
+(1) it will add a row to a custom hash
+table, managed by BiocFileCache, and (2) it will produce a JSON file
+that can be shared or uploaded to public repositories,
+which links the transcriptome checksum
+with the source locations. When the JSON file is provided to
+\texttt{loadLinkedTxome} on another machine, it will add the relevant
+row to tximeta's custom hash table, so tximeta will then recognize and
+automatically populate metadata in a similar manner to if the checksum
+matched with a transcriptome in tximeta's built-in hash
+table. Finally, the cache location for tximeta, managed by
+BiocFileCache, can be shared across users on a cluster, for example,
+such that parsed databases, range objects, and custom hash tables
+created by any one user can be leveraged by all other users in the
+same group.
+
 \begin{table}[t]
   \centering
-  \caption{\bf{Pre-computed reference transcripts checksums in tximeta as of Fall 2019.}}
+  \caption{\bf{Comparison of tximeta to related software.}}
+\begin{tabular}{llccc} 
+  \hline
+  \bf{Software} & \bf{Domain} & \bf{Ranges} & \bf{Release} & \bf{Post hoc} \\
+   & & \bf{autom.}   & \bf{autom.}   & \bf{lookup}   \\
+   & & \bf{attached} & \bf{attached} & \bf{possible} \\
+  \thickhline
+  \underline{tximeta} & RNA-seq import                  & \checkmark & \checkmark & \checkmark \\
+  tximport \cite{tximport} & RNA-seq import             & & & \\
+  \hline
+  Arkas \cite{arkas} & RNA-seq analysis                 & & & \\
+  ARMOR* \cite{Orjuelag2019} & RNA-seq analysis         & \checkmark & \checkmark & \checkmark \\
+  \hline
+  htseq \cite{htseq} & RNA-seq counting                 & & & \\
+  featureCounts \cite{featurecounts} & RNA-seq counting & \checkmark & & \\
+  summarizeOverlaps \cite{granges} & RNA-seq counting   & \checkmark & \checkmark & \\
+  \hline
+  pepkit \cite{pepkit} & Workflow mngmt.                & - & - & \\
+  basejump \cite{basejump} & Metadata utilities         & - & - & \\
+  Refgenie \cite{refgenie} & Genome mngmt.              & - & - & \checkmark \\
+  CRAM+RefGet \cite{cram,refget} & Read alignment       & - & - & \checkmark \\
+  CWLProv \cite{Khan2018} & Workflow tracing            & - & - & \checkmark \\
+\hline
+\end{tabular}
+\begin{flushleft}
+  \hl{Tximeta is compared to related software, grouped by domain.
+    Columns indicate if the transcript or gene ranges are automatically
+    attached the output of the software, whether the transcriptome and
+    genome release information is automatically attached, and whether
+    \textit{post hoc} lookup of transcriptome-related metadata is possible.
+    A hyphen (-) indicates that the column is not directly applicable.
+    *Note that ARMOR imports tximeta for building SummarizedExperiment
+    objects.}
+\end{flushleft}
+\label{tab:comp}
+\end{table}
+
+\subsection*{Comparison to related software}
+
+\hl{A number of related software projects are compared with respect to
+  key features of tximeta in} Table~\ref{tab:comp}. \hl{While other
+  RNA-seq pipelines exist to import quantification data into
+  R/Bioconductor, tximeta uniquely allows for \textit{post hoc}
+  identification of the reference sequence provenance.  The most
+  directly related RNA-seq packages create a SummarizedExperiment, or
+  an object of similar shape and function, including}
+Arkas \cite{arkas}, ARMOR \cite{Orjuelag2019},
+htseq \cite{htseq}, featureCounts \cite{featurecounts} from the
+Rsubread package, and summarizeOverlaps \cite{granges} from the
+GenomicAlignments package. 
+\hl{Arkas imports transcript-level quantification data, but does not
+  attach transcript ranges or release information. ARMOR depends on
+  tximeta, and so relies on functionality described here to attach
+  transcript ranges and release information to the output object.}
+
+\hl{The software htseq, featureCounts, and summarizeOverlaps all
+  perform counting operations for aligned RNA-seq reads with
+  respect to specific gene models, and can be used to generate an
+  R/Bioconductor object similar to that provided by tximeta.  The
+  htseq python package and subsequent data import with DESeq2 create a
+  SummarizedExperiment, but without ranges or release information
+  attached. The R functions featureCounts and summarizeOverlaps
+  automatically attach ranges, and the latter will also attach the
+  transcriptome release metadata, given that a GenomicRanges object
+  was used to perform the counting operation. However, neither
+  featureCounts nor summarizeOverlaps allow for \textit{post hoc}
+  metadata operations, such as the addition or modification of ranges,
+  or addition of relevant metadata, as they do not explicitly connect
+  the object with a remote or locally cached database as tximeta
+  does.}
+
+\hl{Other software such as}
+pepkit \cite{pepkit}, basejump \cite{basejump},
+Refgenie \cite{refgenie},
+CRAM \cite{cram}, refget \cite{refget}, and
+CWLProv \cite{Khan2018}
+\hl{are not particularly designed for RNA-seq data import, and so are
+  less directly comparable to tximeta. Pepkit, basejump, Refgenie, and
+  CWLProv are generic workflow or resource management tools, some of
+  which allow for the possibility of \textit{post hoc} identification
+  of annotation metadata. However, none of these would provide
+  automatic metadata attachment (range and release information) for
+  RNA-seq as accomplished by tximeta.}
+
+\begin{table}[t]
+  \centering
+  \caption{\bf{Pre-computed reference transcripts checksums as of Fall 2019.}}
 \begin{tabular}{llll} 
   \hline
   \bf{Source} & \bf{Organism} & \bf{Releases} & \bf{Transcript sequence file} \\
@@ -323,33 +402,6 @@ transcript or gene identifiers, or addition of exon ranges.
 \end{flushleft}
 \label{tab:hash}
 \end{table}
-
-A key aspect of the tximeta workflow described here is that it does
-not rely on self-reporting of the reference provenance for
-\textit{post hoc} identification of the correct metadata. An exception
-to this rule is the case of a \textit{de novo} constructed
-transcriptome, or in general, use of a transcriptome that is not yet
-contained in tximeta's built-in hash table of reference
-transcriptomes. For such cases, we have developed functionality in
-tximeta to formally link a given hashed checksum to a publicly
-available FASTA file(s) and a GTF/GFF file. The
-\texttt{makeLinkedTxome} function can be called, pointing to the
-transcriptome index as well as to the locations of the FASTA files and
-GTF/GFF file, and this will perform two operations:
-(1) it will add a row to a custom hash
-table, managed by BiocFileCache, and (2) it will produce a JSON file
-that can be shared or uploaded to public repositories,
-which links the transcriptome checksum
-with the source locations. When the JSON file is provided to
-\texttt{loadLinkedTxome} on another machine, it will add the relevant
-row to tximeta's custom hash table, so tximeta will then recognize and
-automatically populate metadata in a similar manner to if the checksum
-matched with a transcriptome in tximeta's built-in hash
-table. Finally, the cache location for tximeta, managed by
-BiocFileCache, can be shared across users on a cluster, for example,
-such that parsed databases, range objects, and custom hash tables
-created by any one user can be leveraged by all other users in the
-same group.
 
 \section*{Results}
 
@@ -410,10 +462,11 @@ tximeta contains information including the estimated counts,
 abundances (in TPM), and the effective lengths of the transcripts.
 It also contains the metadata about the samples in the
 \texttt{colData} slot and metadata about the transcript ranges in the
-\texttt{rowRanges} slot.} The SummarizedExperiment object
-can be passed to various downstream packages such as
-DESeq2, edgeR, limma-voom, or fishpond, with example code in the
-tximeta package vignette \cite{deseq2,edger,limma,voom,swish}. The
+\texttt{rowRanges} slot.
+The SummarizedExperiment object can then be passed to various
+downstream statistical analysis packages such as DESeq2, edgeR,
+limma-voom, or fishpond, with example code in the tximeta software
+vignette} \cite{deseq2,edger,limma,voom,swish}. The
 transcript or gene ranges can be easily manipulated using the
 GenonicRanges or plyranges packages in the Bioconductor ecosystem
 \cite{granges,Lee2019}. For example, to subset the object to only
