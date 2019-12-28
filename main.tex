@@ -151,6 +151,8 @@ create software systems that are ``more amenable to reproducibility''
 
 \section*{Design and Implementation}
 
+\subsection*{Indexing and quantification}
+
 Tximeta has been developed to work \hl{automatically} with output from
 Salmon or alevin quantification tools \cite{salmon,alevin},
 although the implementation could be extended to other quantification
@@ -200,6 +202,8 @@ information as well as others with important metadata about the
 parameters. The entire directory, not just the text file with the
 quantification information, should be considered the output of
 the quantification tool.
+
+\subsection*{Import of quantification data into R}
 
 During import of quantification data into R/Bioconductor
 \cite{bioc}, leveraging the existing tximport package
