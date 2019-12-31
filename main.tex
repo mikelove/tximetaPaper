@@ -86,8 +86,7 @@ research groups, in that the generation of resources is scripted
 \hl{Arkas and ARMOR are 
 frameworks for automating bioinformatic analyses for RNA-seq, where
 metadata can be assembled and attached programmatically to downstream
-outputs, although Arkas does not attach genomic coordinates or release
-information} \cite{arkas,Orjuelag2019}. 
+outputs} \cite{arkas,Orjuelag2019}. 
 \hl{The pepkit framework and the basejump R package assist with
 organization and management of metadata in bioinformatic pipelines,
 though these cannot allow for \textit{post hoc} identification of
@@ -309,8 +308,8 @@ same group.
   \underline{tximeta} & RNA-seq import                  & \checkmark & \checkmark & \checkmark \\
   tximport \cite{tximport} & RNA-seq import             & & & \\
   \hline
-  Arkas \cite{arkas} & RNA-seq analysis                 & & & \\
-  ARMOR* \cite{Orjuelag2019} & RNA-seq analysis         & \checkmark & \checkmark & \checkmark \\
+  Arkas* \cite{arkas} & RNA-seq analysis                 & \checkmark & \checkmark & \\
+  ARMOR$^\dagger$ \cite{Orjuelag2019} & RNA-seq analysis         & \checkmark & \checkmark & \checkmark \\
   \hline
   htseq \cite{htseq} & RNA-seq counting                 & & & \\
   featureCounts \cite{featurecounts} & RNA-seq counting & \checkmark & & \\
@@ -330,8 +329,9 @@ same group.
     genome release information is automatically attached, and whether
     \textit{post hoc} lookup of transcriptome-related metadata is possible.
     A hyphen (-) indicates that the column is not directly applicable.
-    *Note that ARMOR imports tximeta for building SummarizedExperiment
-    objects.}
+    *Arkas attaches transcript ranges and release information
+    for Ensembl transcripts only.
+    $^\dagger$ARMOR imports tximeta for object construction.}
 \end{flushleft}
 \label{tab:comp}
 \end{table}
@@ -345,14 +345,21 @@ same group.
   identification of the reference sequence provenance.  The most
   directly related RNA-seq software packages create a
   SummarizedExperiment, or an object of similar shape and function,
-  including} Arkas \cite{arkas}, ARMOR \cite{Orjuelag2019}, htseq
-\cite{htseq}, featureCounts \cite{featurecounts} from the Rsubread
-package, and summarizeOverlaps \cite{granges} from the
-GenomicAlignments package. \hl{Arkas imports transcript-level
-  quantification data, but does not attach transcript ranges or
-  release information. ARMOR depends on tximeta, and so relies on
-  functionality described here to attach transcript ranges and release
-  information to the output object.}
+  including}
+Arkas \cite{arkas}, ARMOR \cite{Orjuelag2019}, htseq \cite{htseq},
+featureCounts \cite{featurecounts} from the Rsubread package,
+and summarizeOverlaps \cite{granges} from the GenomicAlignments
+package.
+\hl{Arkas is a framework for importing transcript-level quantification
+  data into R/Bioconductor, and specifically designed for extracting
+  annotation metadata from Ensembl FASTA files.
+  Arkas parses information from the FASTA header lines, and so is
+  limited in this respect. For example, GENCODE transcript files do
+  not contain transcript ranges in the header lines, and Ensembl
+  header lines do not contain information about exons or their ranges.
+  ARMOR depends on tximeta, and so relies on functionality described
+  here to attach transcript ranges and release information to the
+  output object.}
 
 \hl{The software packages or functions htseq, featureCounts, and
   summarizeOverlaps all 
