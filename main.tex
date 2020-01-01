@@ -129,10 +129,9 @@ names, but short of full automation of \hl{downstream statistical} analyses
 as in Arkas and ARMOR. Tximeta captures the versions of the software
 packages used in import of quantification data, but does not provide
 full provenance tracking throughout downstream tasks as in the
-Research Object specification or in CWLProv. One \hl{unique} aspect of
-tximeta is that -- through the use of hashed checksums of reference
-transcripts and lookup operations similar to those performed by refget
--- our implementation can be used to identify the reference provenance
+Research Object specification or in CWLProv. \hl{One unique aspect of
+tximeta in the context of RNA-seq is that} our implementation can be
+used to identify the reference provenance
 \textit{post hoc} on various shared or public datasets, regardless of
 whether the original analyst kept or shared accurate records of the
 reference transcripts that were used. Therefore it can provide some
@@ -249,12 +248,13 @@ embedded in an appropriate genome version (e.g. GRCh38) including
 chromosome names and lengths. \hl{The SummarizedExperiment object can
 then be used with downstream statistical analysis packages in
 Bioconductor, as described in the tximeta software vignette.}
+If tximeta did not find a matching transcriptome in the hash table
+then a non-ranged SummarizedExperiment will be returned as the
+function's output, as the location and context of the transcript
+ranges are not known to tximeta.
 
-If tximeta did not find a matching
-transcriptome in the hash table then a non-ranged SummarizedExperiment
-will be returned as the function's output, as the location and context
-of the transcript ranges are not known to tximeta. Comparison of
-ranges across genome versions, or without properly matching
+If the transcriptome was identified, and ranges were attached, then
+comparing data across genome versions, or without properly matching
 chromosomes, will produce an error, leveraging default functionality
 from the underlying GenomicRanges package \cite{granges}. Metadata
 about the samples, if provided by the user, is automatically attached
@@ -292,7 +292,7 @@ automatically populate metadata in a similar manner to if the checksum
 matched with a transcriptome in tximeta's built-in hash
 table. Finally, the cache location for tximeta, managed by
 BiocFileCache, can be shared across users on a cluster, for example,
-such that parsed databases, range objects, and custom hash tables
+such that parsed databases, GRanges objects, and custom hash tables
 created by any one user can be leveraged by all other users in the
 same group.
 
@@ -370,7 +370,7 @@ package.
   SummarizedExperiment, but without ranges or release information
   attached. The R functions featureCounts and summarizeOverlaps
   automatically attach ranges, and the latter will also attach the
-  transcriptome release metadata, given that a GenomicRanges object
+  transcriptome release metadata, given that a GRanges object
   was used to perform the counting operation. However, neither
   featureCounts nor summarizeOverlaps allow for \textit{post hoc}
   metadata operations, such as the addition or modification of ranges,
@@ -454,7 +454,7 @@ samples are from a human macrophage RNA-seq experiment \cite{alasoo}.
     ## 2 SAMEA103885347    diku_B  diku_1         1           IFNg
 \end{verbatim}
 
-This table must have a column \texttt{files} which points to paths of
+This table must have a column \texttt{files} that points to paths of
 quantification files (\texttt{quant.sf}), and a column \texttt{names} with the sample
 identifiers. The following line can be used to create the
 \texttt{files} column (if it does not already exist), where \texttt{dir}
@@ -473,7 +473,7 @@ step is to provide this table to the \texttt{tximeta} function, which
 returns a SummarizedExperiment object. \hl{If a match of the hashed
 checksum is found, tximeta will print a message identifying the
 transcriptome and will attach relevant metadata including the genomic
-positions of the transcripts.}
+ranges of the transcripts.}
 
 \begin{verbatim}
     se <- tximeta(coldata)
