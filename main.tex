@@ -32,7 +32,7 @@ but without critical metadata about the genome version, computation of
 overlaps with other genomic data with mis-matching genome versions can
 lead to faulty inference of overlap enrichment. Additional annotation
 tasks, such as conversion of transcript or gene identifiers, or
-summarization of transcript-level data to the gene level is made more difficult
+summarization of transcript-level data to the gene level, is made more difficult
 when the reference provenance is not known. Kanduri \textit{et al.}~\cite{Kanduri2017}
 documented issues surrounding the lack of provenance metadata for BED,
 WIG, and GFF files, and described this problem as a ``major time
@@ -126,7 +126,8 @@ via sequence checksums. It is situated among other solutions for
 facilitating computational reproducibility described above, with some
 automation of routine tasks, such as conversion of transcript and gene
 names, but short of full automation of \hl{downstream statistical} analyses
-as in Arkas and ARMOR. Tximeta captures the versions of the software
+as in Arkas and ARMOR \hl{(note, however, that ARMOR relies on tximeta 
+for the import of transcript abundances)}. Tximeta captures the versions of the software
 packages used in import of quantification data, but does not provide
 full provenance tracking throughout downstream tasks as in the
 Research Object specification or in CWLProv. \hl{One unique aspect of
