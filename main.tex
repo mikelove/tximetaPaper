@@ -1,3 +1,5 @@
+\section*{Author Summary}
+
 \section*{Introduction}
 
 An RNA-seq data analysis often involves quantification of sequence
@@ -164,9 +166,9 @@ describe the implementation referring to Salmon quantification data
 below. A diagram of the following workflow is shown in Figure
 \ref{fig:diagram}. 
 
-\begin{figure}
+\begin{figure}[!h]
   \centering
-  \includegraphics[width=\textwidth]{diagram.pdf}
+  %\includegraphics[width=\textwidth]{diagram.pdf}
   \caption{
     {\bf Flowchart of Salmon quantification followed by tximeta.}
     The quantification and import pipeline results in a
@@ -296,7 +298,32 @@ such that parsed databases, GRanges objects, and custom hash tables
 created by any one user can be leveraged by all other users in the
 same group.
 
-\begin{table}[t]
+\subsection*{Comparison to related software}
+
+A number of related software projects are compared with respect to
+key features of tximeta in Table~\ref{tab:comp}. While other
+RNA-seq pipelines can import quantification data into
+R/Bioconductor, tximeta uniquely allows for \textit{post hoc}
+identification of the reference sequence provenance.  The most
+directly related RNA-seq software packages create a
+SummarizedExperiment, or an object of similar shape and function,
+including
+Arkas \cite{arkas}, ARMOR \cite{Orjuelag2019}, htseq \cite{htseq},
+featureCounts \cite{featurecounts} from the Rsubread package,
+and summarizeOverlaps \cite{granges} from the GenomicAlignments
+package.
+Arkas is a framework for importing transcript-level quantification
+data into R/Bioconductor, and specifically designed for extracting
+annotation metadata from Ensembl FASTA files.
+Arkas parses information from the FASTA header lines, and so is
+limited in this respect. For example, GENCODE transcript files do
+not contain transcript ranges in the header lines, and Ensembl
+header lines do not contain information about exons or their ranges.
+ARMOR depends on tximeta, and so relies on functionality described
+here to attach transcript ranges and release information to the
+output object.
+
+\begin{table}[!h]
   \centering
   \caption{\bf{Comparison of tximeta to related software.}}
 \begin{tabular}{llccc} 
@@ -336,31 +363,6 @@ same group.
 \label{tab:comp}
 \end{table}
 
-\subsection*{Comparison to related software}
-
-A number of related software projects are compared with respect to
-key features of tximeta in Table~\ref{tab:comp}. While other
-RNA-seq pipelines can import quantification data into
-R/Bioconductor, tximeta uniquely allows for \textit{post hoc}
-identification of the reference sequence provenance.  The most
-directly related RNA-seq software packages create a
-SummarizedExperiment, or an object of similar shape and function,
-including
-Arkas \cite{arkas}, ARMOR \cite{Orjuelag2019}, htseq \cite{htseq},
-featureCounts \cite{featurecounts} from the Rsubread package,
-and summarizeOverlaps \cite{granges} from the GenomicAlignments
-package.
-Arkas is a framework for importing transcript-level quantification
-data into R/Bioconductor, and specifically designed for extracting
-annotation metadata from Ensembl FASTA files.
-Arkas parses information from the FASTA header lines, and so is
-limited in this respect. For example, GENCODE transcript files do
-not contain transcript ranges in the header lines, and Ensembl
-header lines do not contain information about exons or their ranges.
-ARMOR depends on tximeta, and so relies on functionality described
-here to attach transcript ranges and release information to the
-output object.
-
 The software packages or functions htseq, featureCounts, and
 summarizeOverlaps all 
 perform counting operations for aligned RNA-seq reads with
@@ -391,7 +393,18 @@ of annotation metadata. However, none of these would provide
 automatic metadata attachment (range and release information) for
 RNA-seq data as accomplished by tximeta.
 
-\begin{table}[t]
+\section*{Results}
+
+\subsection*{Importing quantification data from known transcriptome}
+
+An example of importing RNA-seq quantification data using tximeta can
+be followed in the tximeta or fishpond Bioconductor package
+vignettes. Here we demonstrate the case where the Salmon files were
+quantified against a transcriptome that is in tximeta's pre-computed
+hash table. A list of supported transcriptomes as of the writing
+of this manuscript is provided in Table \ref{tab:hash}. 
+
+\begin{table}[!h]
   \centering
   \caption{\bf{Pre-computed reference transcripts checksums as of early 2020.}}
 \begin{tabular}{llll} 
@@ -425,19 +438,9 @@ RNA-seq data as accomplished by tximeta.
 \label{tab:hash}
 \end{table}
 
-\section*{Results}
-
-\subsection*{Importing quantification data from known transcriptome}
-
-An example of importing RNA-seq quantification data using tximeta can
-be followed in the tximeta or fishpond Bioconductor package
-vignettes. Here we demonstrate the case where the Salmon files were
-quantified against a transcriptome that is in tximeta's pre-computed
-hash table (for a list of supported transcriptomes as of the writing
-of this manuscript, see Table \ref{tab:hash}). Import begins by specifying
-a sample table (the ``column data'', as the columns of the
-SummarizedExperiment object correspond to samples from the
-experiment).
+Import begins by specifying a sample table (the ``column data'', as
+the columns of the SummarizedExperiment object correspond to samples
+from the experiment).
 
 \begin{verbatim}
     coldata <- read.csv("coldata.csv")
@@ -664,18 +667,18 @@ to the ``major time thief'' of \textit{post hoc} guesswork involved in
 identifying the provenance of datasets shared publicly but without
 critical metadata \cite{Kanduri2017}.
 
-\section*{Data Availability}
+%% \section*{Data Availability}
 
-All datasets used in this manuscript are available as Bioconductor
-data packages used in the tximeta or fishpond package vignettes, or
-in the case of the \textit{de novo} transcriptome analysis, have been
-deposited to Zenodo: 
+%% All datasets used in this manuscript are available as Bioconductor
+%% data packages used in the tximeta or fishpond package vignettes, or
+%% in the case of the \textit{de novo} transcriptome analysis, have been
+%% deposited to Zenodo: 
 
-\begin{itemize}
-  \item Quantification data (Salmon output directory, tar.gz) \cite{killi-quant} \\
-    \href{https://doi.org/10.5281/zenodo.1486283}{DOI: 10.5281/zenodo.1486283}
-  \item De novo transcriptome assembly (FASTA) \cite{killi-fasta} \\
-    \href{https://doi.org/10.5281/zenodo.1486276}{DOI: 10.5281/zenodo.1486276},
-  \item Annotation file (GFF3) \cite{killi-gff} \\
-    \href{https://doi.org/10.5281/zenodo.2226742}{DOI: 10.5281/zenodo.2226742},
-\end{itemize}
+%% \begin{itemize}
+%%   \item Quantification data (Salmon output directory, tar.gz) \cite{killi-quant} \\
+%%     \href{https://doi.org/10.5281/zenodo.1486283}{DOI: 10.5281/zenodo.1486283}
+%%   \item De novo transcriptome assembly (FASTA) \cite{killi-fasta} \\
+%%     \href{https://doi.org/10.5281/zenodo.1486276}{DOI: 10.5281/zenodo.1486276},
+%%   \item Annotation file (GFF3) \cite{killi-gff} \\
+%%     \href{https://doi.org/10.5281/zenodo.2226742}{DOI: 10.5281/zenodo.2226742},
+%% \end{itemize}
