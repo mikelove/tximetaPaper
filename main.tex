@@ -1,20 +1,21 @@
 \section*{Author Summary}
 
-Gene expression quantification with RNA sequencing is a common
+Gene expression quantification from RNA sequencing is a common
 component of many research publications. In order that research
 findings can be computationally reproducible, it is critical that gene
 expression datasets are linked to the correct gene annotation,
 including the source of the annotation, the release number, and the
-location of the genes in particular genome assembly. Often it is
+location of the genes in a particular genome assembly. Often it is
 difficult for this critical metadata to be found for public datasets,
-and manually curating this information within a lab subjects the
-process to human error. We describe a solution for this problem,
-whereby we embed a checksum of the reference sequences in the output
-data during expression quantification, and then we use this checksum
-for identification and automatic attachment of the correct metadata
-when the dataset is loaded into R for statistical analysis. We feel
-this paradigm of embedded checksums and subsequent metadata retrieval
-will prove useful in other computational biology contexts as well.
+and manually curating this information subjects the process to human
+error. We describe a solution for the missing metadata problem,
+whereby we embed a checksum of the RNA reference sequences in the
+output files during the expression quantification step. Later we use
+this checksum for identification and automatic attachment of the
+correct metadata when the dataset is loaded into R for statistical
+analysis. We feel this paradigm of embedded checksums and subsequent
+metadata retrieval will also prove useful in other computational
+biology contexts.
 
 \section*{Introduction}
 
