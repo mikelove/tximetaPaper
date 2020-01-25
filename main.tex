@@ -41,10 +41,10 @@ Scott~\cite{Simoneau2019} described
 information on genome assembly and annotation as ``essential'' for
 describing the computational analysis of RNA-seq data, and contended
 that, ``no study using RNA-seq should be published without these
-methodological details.'' \hl{Simoneau and co-authors have recently
+methodological details.'' Simoneau and co-authors have recently
 performed a detailed analysis of hundreds of published RNA-seq studies,
 finding that the majority did not include annotation source and release
-information, thus hindering reproducible analysis}~\cite{Simoneau2019BIB}.
+information, thus hindering reproducible analysis~\cite{Simoneau2019BIB}.
 
 A number of frameworks have been proposed that would solve the problem
 of tracking provenance in a bioinformatic analysis -- provenance in
@@ -64,7 +64,7 @@ of the file header. A partner utility called refget has been developed
 in order to allow for programmatic retrieval of the reference sequence
 from a computed checksum, which acts as an identifier of the reference
 sequence
-\hl{when reads have been aligned to chromosomes} \cite{refget}.
+when reads have been aligned to chromosomes \cite{refget}.
 A similar approach is taken by the Global
 Alliance for Genomics and Health's (GA4GH) Variation Representation
 Specification (VR-Spec) \cite{vr}, which uses a hashed checksum (or
@@ -82,15 +82,14 @@ number of reference sequences is Refgenie. Refgenie is a tool that
 helps with management of bundles of files associated with reference
 genomes, and facilitates sharing provenance information across
 research groups, in that the generation of resources is scripted
-\cite{refgenie}.
-\hl{Arkas and ARMOR are 
+\cite{refgenie}. Arkas and ARMOR are 
 frameworks for automating bioinformatic analyses for RNA-seq, where
 metadata can be assembled and attached programmatically to downstream
-outputs} \cite{arkas,Orjuelag2019}. 
-\hl{The pepkit framework and the basejump R package assist with
+outputs \cite{arkas,Orjuelag2019}. 
+The pepkit framework and the basejump R package assist with
 organization and management of metadata in bioinformatic pipelines,
 though these cannot allow for \textit{post hoc} identification of
-reference provenance} \cite{pepkit, basejump}.
+reference provenance \cite{pepkit, basejump}.
 
 In 2015, Belhajjame \textit{et al.}~\cite{Belhajjame2015} introduced
 the concept of a ``Research Object'', an aggregation of data and
@@ -125,25 +124,25 @@ identification of reference transcript provenance in RNA-seq analyses
 via sequence checksums. It is situated among other solutions for
 facilitating computational reproducibility described above, with some
 automation of routine tasks, such as conversion of transcript and gene
-names, but short of full automation of \hl{downstream statistical} analyses
-as in Arkas and ARMOR \hl{(note, however, that ARMOR relies on tximeta 
-for the import of transcript abundances)}. Tximeta captures the versions of the software
+names, but short of full automation of downstream statistical analyses
+as in Arkas and ARMOR (note, however, that ARMOR relies on tximeta 
+for the import of transcript abundances). Tximeta captures the versions of the software
 packages used in import of quantification data, but does not provide
 full provenance tracking throughout downstream tasks as in the
-Research Object specification or in CWLProv. \hl{One unique aspect of
-tximeta in the context of RNA-seq is that} our implementation can be
+Research Object specification or in CWLProv. One unique aspect of
+tximeta in the context of RNA-seq is that our implementation can be
 used to identify the reference provenance
 \textit{post hoc} on various shared or public datasets, regardless of
 whether the original analyst kept or shared accurate records of the
 reference transcripts that were used. Therefore it can provide some
 utility for bioinformatic analysts without requiring full buy-in of a
 particular workflow execution framework.
-\hl{\textit{Post hoc} transcriptome identification is a novel
+\textit{Post hoc} transcriptome identification is a novel
 functionality not offered by alternative existing pipelines for
-importing or creating RNA-seq count matrices in R/Bioconductor.}
+importing or creating RNA-seq count matrices in R/Bioconductor.
 Tximeta is similar in implementation to the CRAM format in the use of
 hashed checksums, but identifies the transcript sequences used during
-\hl{RNA-seq} sample quantification rather than the genome sequence
+RNA-seq sample quantification rather than the genome sequence
 used during alignment. We see tximeta as a piece of a larger effort to
 create software systems that are ``more amenable to reproducibility''
 \cite{Peng2011}.
@@ -152,15 +151,15 @@ create software systems that are ``more amenable to reproducibility''
 
 \subsection*{Indexing and quantification}
 
-Tximeta has been developed to work \hl{automatically} with output from
+Tximeta has been developed to work automatically with output from
 Salmon or alevin quantification tools \cite{salmon,alevin},
 although the implementation could be extended to other quantification
 tools that store the appropriate hashed checksum within the index and
 propagate this checksum to the sample output metadata.
-\hl{In addition, tximeta will work with any transcript-level
+In addition, tximeta will work with any transcript-level
 quantification tool, as long as it is wrapped in a pipeline that
 writes the reference sequence checksum to a metadata file in each
-sample output directory.} Without loss of generality, we
+sample output directory. Without loss of generality, we
 describe the implementation referring to Salmon quantification data
 below. A diagram of the following workflow is shown in Figure
 \ref{fig:diagram}. 
@@ -173,9 +172,9 @@ below. A diagram of the following workflow is shown in Figure
     The quantification and import pipeline results in a
     SummarizedExperiment object with reference transcript provenance
     metadata added by tximeta (see Design and Implementation).
-    \hl{The SummarizedExperiment object contains estimated counts and
+    The SummarizedExperiment object contains estimated counts and
     other relevant metadata, and can be used with downstream
-    statistical packages.}}
+    statistical packages.}
   \label{fig:diagram}
 \end{figure}
 
@@ -210,7 +209,7 @@ During import of quantification data into R/Bioconductor
 the transcriptome index checksum, and compares this checksum to a hash
 table of pre-computed checksums of a subset of commonly used reference
 transcriptomes (human, mouse, and fruit fly reference transcripts from
-GENCODE, Ensembl, and RefSeq, see Table \ref{tab:hash}), as well as to a
+GENCODE, Ensembl, and RefSeq), as well as to a
 custom hash table which will be described below. Tximeta verifies that
 the checksum and therefore the reference transcriptome sequence is
 identical across all samples being imported. If there is a match of
@@ -228,10 +227,10 @@ before, one of two steps will occur:
   locally cached SQLite database of the parsed GTF/GFF file, as well as a
   GRanges object of the transcript locations \cite{granges}. The
   local cache is managed by the BiocFileCache Bioconductor package
-  \cite{biocfilecache}. \hl{If the database for the correct Ensembl
+  \cite{biocfilecache}. If the database for the correct Ensembl
     release is available using Bioconductor's AnnotationHub
     infrastructure, this pre-parsed database will be downloaded
-    instead of downloading and parsing the GTF.}
+    instead of downloading and parsing the GTF.
 \item (Subsequently) - Tximeta loads the locally cached versions of
   metadata (the transcript ranges, or additionally the SQLite database
   on demand for further annotation tasks).
@@ -246,9 +245,9 @@ million, TPM). By convention, rows correspond to genomic features
 (e.g. transcripts or genes), while columns correspond to samples. In
 addition, the rows of the matrices are linked to transcript ranges,
 embedded in an appropriate genome version (e.g. GRCh38) including
-chromosome names and lengths. \hl{The SummarizedExperiment object can
+chromosome names and lengths. The SummarizedExperiment object can
 then be used with downstream statistical analysis packages in
-Bioconductor, as described in the tximeta software vignette.}
+Bioconductor, as described in the tximeta software vignette.
 If tximeta did not find a matching transcriptome in the hash table
 then a non-ranged SummarizedExperiment will be returned as the
 function's output, as the location and context of the transcript
@@ -324,73 +323,73 @@ same group.
 \hline
 \end{tabular}
 \begin{flushleft}
-  \hl{Tximeta is compared to related software, grouped by domain.
-    Columns indicate if the transcript or gene ranges are automatically
-    attached to the output of the software, whether the transcriptome and
-    genome release information is automatically attached, and whether
-    \textit{post hoc} lookup of transcriptome-related metadata is possible.
-    A hyphen (-) indicates that the column is not directly applicable.
-    *Arkas attaches transcript ranges and release information
-    for Ensembl transcripts only.
-    $^\dagger$ARMOR imports tximeta for object construction.}
+  Tximeta is compared to related software, grouped by domain.
+  Columns indicate if the transcript or gene ranges are automatically
+  attached to the output of the software, whether the transcriptome and
+  genome release information is automatically attached, and whether
+  \textit{post hoc} lookup of transcriptome-related metadata is possible.
+  A hyphen (-) indicates that the column is not directly applicable.
+  *Arkas attaches transcript ranges and release information
+  for Ensembl transcripts only.
+  $^\dagger$ARMOR imports tximeta for object construction.
 \end{flushleft}
 \label{tab:comp}
 \end{table}
 
 \subsection*{Comparison to related software}
 
-\hl{A number of related software projects are compared with respect to
-  key features of tximeta in} Table~\ref{tab:comp}. \hl{While other
-  RNA-seq pipelines can import quantification data into
-  R/Bioconductor, tximeta uniquely allows for \textit{post hoc}
-  identification of the reference sequence provenance.  The most
-  directly related RNA-seq software packages create a
-  SummarizedExperiment, or an object of similar shape and function,
-  including}
+A number of related software projects are compared with respect to
+key features of tximeta in Table~\ref{tab:comp}. While other
+RNA-seq pipelines can import quantification data into
+R/Bioconductor, tximeta uniquely allows for \textit{post hoc}
+identification of the reference sequence provenance.  The most
+directly related RNA-seq software packages create a
+SummarizedExperiment, or an object of similar shape and function,
+including
 Arkas \cite{arkas}, ARMOR \cite{Orjuelag2019}, htseq \cite{htseq},
 featureCounts \cite{featurecounts} from the Rsubread package,
 and summarizeOverlaps \cite{granges} from the GenomicAlignments
 package.
-\hl{Arkas is a framework for importing transcript-level quantification
-  data into R/Bioconductor, and specifically designed for extracting
-  annotation metadata from Ensembl FASTA files.
-  Arkas parses information from the FASTA header lines, and so is
-  limited in this respect. For example, GENCODE transcript files do
-  not contain transcript ranges in the header lines, and Ensembl
-  header lines do not contain information about exons or their ranges.
-  ARMOR depends on tximeta, and so relies on functionality described
-  here to attach transcript ranges and release information to the
-  output object.}
+Arkas is a framework for importing transcript-level quantification
+data into R/Bioconductor, and specifically designed for extracting
+annotation metadata from Ensembl FASTA files.
+Arkas parses information from the FASTA header lines, and so is
+limited in this respect. For example, GENCODE transcript files do
+not contain transcript ranges in the header lines, and Ensembl
+header lines do not contain information about exons or their ranges.
+ARMOR depends on tximeta, and so relies on functionality described
+here to attach transcript ranges and release information to the
+output object.
 
-\hl{The software packages or functions htseq, featureCounts, and
-  summarizeOverlaps all 
-  perform counting operations for aligned RNA-seq reads with
-  respect to specific gene models, and can be used to generate an
-  R/Bioconductor object similar to that provided by tximeta.  The
-  htseq python package and subsequent data import with DESeq2 create a
-  SummarizedExperiment, but without ranges or release information
-  attached. The R functions featureCounts and summarizeOverlaps
-  automatically attach ranges, and the latter will also attach the
-  transcriptome release metadata, given that a GRanges object
-  was used to perform the counting operation. However, neither
-  featureCounts nor summarizeOverlaps allow for \textit{post hoc}
-  metadata operations, such as the addition or modification of ranges,
-  or addition of relevant metadata, as they do not explicitly connect
-  the object with a remote or locally cached database as tximeta
-  does.}
+The software packages or functions htseq, featureCounts, and
+summarizeOverlaps all 
+perform counting operations for aligned RNA-seq reads with
+respect to specific gene models, and can be used to generate an
+R/Bioconductor object similar to that provided by tximeta.  The
+htseq python package and subsequent data import with DESeq2 create a
+SummarizedExperiment, but without ranges or release information
+attached. The R functions featureCounts and summarizeOverlaps
+automatically attach ranges, and the latter will also attach the
+transcriptome release metadata, given that a GRanges object
+was used to perform the counting operation. However, neither
+featureCounts nor summarizeOverlaps allow for \textit{post hoc}
+metadata operations, such as the addition or modification of ranges,
+or addition of relevant metadata, as they do not explicitly connect
+the object with a remote or locally cached database as tximeta
+does.
 
-\hl{Other software such as}
+Other software such as
 pepkit \cite{pepkit}, basejump \cite{basejump},
 Refgenie \cite{refgenie},
 CRAM \cite{cram}, refget \cite{refget}, and
 CWLProv \cite{Khan2018}
-\hl{are not particularly designed for RNA-seq data import, and so are
-  less directly comparable to tximeta. Pepkit, basejump, Refgenie, and
-  CWLProv are generic workflow or resource management tools, some of
-  which allow for the possibility of \textit{post hoc} identification
-  of annotation metadata. However, none of these would provide
-  automatic metadata attachment (range and release information) for
-  RNA-seq data as accomplished by tximeta.}
+are not particularly designed for RNA-seq data import, and so are
+less directly comparable to tximeta. Pepkit, basejump, Refgenie, and
+CWLProv are generic workflow or resource management tools, some of
+which allow for the possibility of \textit{post hoc} identification
+of annotation metadata. However, none of these would provide
+automatic metadata attachment (range and release information) for
+RNA-seq data as accomplished by tximeta.
 
 \begin{table}[t]
   \centering
@@ -399,16 +398,16 @@ CWLProv \cite{Khan2018}
   \hline
   \bf{Source} & \bf{Organism} & \bf{Releases} & \bf{Transcript sequence file} \\
   \thickhline
-  GENCODE & \textit{Homo sapiens} & 23 -- 32 & transcripts.fa \\
-  GENCODE & \textit{Mus musculus} & M6 -- M23 & transcripts.fa \\
+  GENCODE & \textit{Homo sapiens} & 23 -- 33 & transcripts.fa \\
+  GENCODE & \textit{Mus musculus} & M6 -- M24 & transcripts.fa \\
   \hline
-  Ensembl & \textit{Homo sapiens} & 76 -- 98 & *.cdna.all.fa (NR) \\
-  Ensembl & \textit{Mus musculus} & 76 -- 98 & *.cdna.all.fa (NR) \\
-  Ensembl & \textit{Drosophila melanogaster} & 79 -- 98 & *.cdna.all.fa (NR) \\
+  Ensembl & \textit{Homo sapiens} & 76 -- 99 & *.cdna.all.fa (NR) \\
+  Ensembl & \textit{Mus musculus} & 76 -- 99 & *.cdna.all.fa (NR) \\
+  Ensembl & \textit{Drosophila melanogaster} & 79 -- 99 & *.cdna.all.fa (NR) \\
   \hline
-  Ensembl & \textit{Homo sapiens} & 76 -- 98 & *.cdna.all.fa + *.ncrna.fa \\
-  Ensembl & \textit{Mus musculus} & 76 -- 98 & *.cdna.all.fa + *.ncrna.fa \\
-  Ensembl & \textit{Drosophila melanogaster} & 79 -- 98 & *.cdna.all.fa + *.ncrna.fa \\
+  Ensembl & \textit{Homo sapiens} & 76 -- 99 & *.cdna.all.fa + *.ncrna.fa \\
+  Ensembl & \textit{Mus musculus} & 76 -- 99 & *.cdna.all.fa + *.ncrna.fa \\
+  Ensembl & \textit{Drosophila melanogaster} & 79 -- 99 & *.cdna.all.fa + *.ncrna.fa \\
   \hline
   RefSeq & \textit{Homo sapiens} & p1 -- p12$\dagger$ & *\_rna.fa \\
   RefSeq & \textit{Mus musculus} & p2 -- p5$\dagger$ & *\_rna.fa \\
@@ -471,16 +470,16 @@ It is expected that the quantification files are located
 within the original directory structure created by Salmon and with all
 the associated metadata files. The next
 step is to provide this table to the \texttt{tximeta} function, which
-returns a SummarizedExperiment object. \hl{If a match of the hashed
+returns a SummarizedExperiment object. If a match of the hashed
 checksum is found, tximeta will print a message identifying the
 transcriptome and will attach relevant metadata including the genomic
-ranges of the transcripts.}
+ranges of the transcripts.
 
 \begin{verbatim}
     se <- tximeta(coldata)
 \end{verbatim}
 
-\hl{The SummarizedExperiment object, \texttt{se}, that is returned by
+The SummarizedExperiment object, \texttt{se}, that is returned by
 tximeta contains information including the estimated counts,
 abundances (in TPM), and the effective lengths of the transcripts.
 It also contains the metadata about the samples in the
@@ -489,7 +488,7 @@ It also contains the metadata about the samples in the
 The SummarizedExperiment object can then be passed to various
 downstream statistical analysis packages such as DESeq2, edgeR,
 limma-voom, or fishpond, with example code in the tximeta software
-vignette} \cite{deseq2,edger,limma,voom,swish}. The
+vignette \cite{deseq2,edger,limma,voom,swish}. The
 transcript or gene ranges can be easily manipulated using the
 GenomicRanges or plyranges packages in the Bioconductor ecosystem
 \cite{granges,Lee2019}. For example, to subset the object to only
@@ -572,9 +571,9 @@ likewise store an entry in the custom hash table of the machine where
 it is loaded. In either case, when the quantification data \citep{killi-quant} is later
 imported using tximeta, the checksum will be recognized and the
 relevant metadata attached to the SummarizedExperiment object output.
-\hl{After the above function has been run, or \texttt{loadLinkedTxome} has
+After the above function has been run, or \texttt{loadLinkedTxome} has
 been run, then the steps proceed as before, calling \texttt{tximeta}
-with an argument that specifies the sample table.}
+with an argument that specifies the sample table.
 
 \begin{verbatim}
    se <- tximeta(coldata)
@@ -639,14 +638,14 @@ reference transcript identification with transcript variant
 identification as described in GA4GH's Variant Representation
 Specification \cite{vr}.
 
-\hl{Tximeta extends tximport} \cite{tximport}, \hl{and so is
-  appropriate for importing transcript-level quantification data.
-  Tximeta is not applicable to tasks such as counting of
-  genome-aligned reads in genomic features such as exons, or ChIP- or
-  ATAC-seq peaks. For aligned reads stored in CRAM format} \cite{cram},
-\hl{future work along the lines of tximeta could involve programmatic
-  utilization of genomic feature release metadata following read
-  counting operations, for example matching exons to transcripts.}
+Tximeta extends tximport \cite{tximport}, and so is
+appropriate for importing transcript-level quantification data.
+Tximeta is not applicable to tasks such as counting of
+genome-aligned reads in genomic features such as exons, or ChIP- or
+ATAC-seq peaks. For aligned reads stored in CRAM format \cite{cram},
+future work along the lines of tximeta could involve programmatic
+utilization of genomic feature release metadata following read
+counting operations, for example matching exons to transcripts.
 
 All bioinformatic software packages have limited lifespan, including
 the package described here. We join with others in
@@ -655,9 +654,9 @@ checksums in sample output metadata, followed by downstream database
 lookup of checksums, and identification of reference sequence
 metadata. This paradigm should be adopted by other bioinformatic
 software that outputs any data that refers to a reference
-sequence. \hl{In addition, workflows can be created that wrap existing
-  tools to ensure that hashed checksums of relevant annotation
-  metadata are propagated to sample output directories.}
+sequence. In addition, workflows can be created that wrap existing
+tools to ensure that hashed checksums of relevant annotation
+metadata are propagated to sample output directories.
 Such workflows have the advantage of not requiring additional
 effort or actions on the part of the upstream bioinformatic
 analyst. Otherwise, we risk exposing downstream analysts
